@@ -8,3 +8,8 @@
   - undercloud
   roles:
   - undercloud_installer
+
+- hosts: 
+  - undercloud
+  roles:
+  - undercloud_deployer

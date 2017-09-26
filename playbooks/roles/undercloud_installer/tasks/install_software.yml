@@ -4,10 +4,15 @@
     name: python-tripleoclient
     state: latest
 
-- name: get contrail packages
-  get_url:
-    url: "{{ CONTRAIL_PACKAGE_LOCATION }}/{{ CONTRAIL_PACKAGE_NAME }}"
-    dest: /tmp/{{ CONTRAIL_PACKAGE_NAME }}
+- name: install apache 
+  yum:
+    name: httpd
+    state: latest
+
+- name: start apache
+  service:
+    name: httpd
+    state: started
 
 - name: create contrail repo directory
   file:
@@ -17,5 +22,18 @@
 
 - name: extract contrail package
   unarchive:
-    src: /tmp/{{ CONTRAIL_PACKAGE_NAME }}
+    src: "{{ CONTRAIL_PACKAGE_LOCATION }}/contrail-install-packages_{{ CONTRAIL_VERSION }}-{{ CONTRAIL_VERSION_BUILD }}-{{ OPENSTACK_VERSION }}.tgz"
     dest: /var/www/html/contrail
+    remote_src: true
+
+- name: add contrail repository
+  yum_repository:
+    name: contrail
+    description: contrail rep
+    baseurl: http://localhost/contrail
+
+- name: install contrail tripleo heat templates
+  yum:
+    name: contrail-tripleo-heat-templates
+    state: latest
+    disable_gpg_check: yes
