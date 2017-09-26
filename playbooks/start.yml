@@ -11,5 +11,8 @@
 
 - hosts: 
   - undercloud
+  user: stack
   roles:
   - undercloud_deployer
+  vars_files:
+  - ../inventory/group_vars/ironic_nodes.yml

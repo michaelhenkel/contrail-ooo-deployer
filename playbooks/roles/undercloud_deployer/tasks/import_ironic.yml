@@ -1,0 +1,20 @@
+---
+- name: import ironic nodes
+  command: |
+    /bin/ironic node-create \
+    -d pxe_ssh \
+    -p cpus=4 \
+    -p memory_mb=16348 \
+    -p local_gb=40 
+    -p cpu_arch=x86_64 \
+    -i ssh_username="{{ item.value.user }}" \
+    -i ssh_virt_type=virsh \
+    -i ssh_address="{{ item.value.ip }}" \
+    -i ssh_password="{{ item.value.password }}" \
+    -n "{{ item.key }}" \
+    -p capabilities=profile:"{{ item.role }}" | tail -2|awk '{print $4}'
+  register: command_result
+
+- name: debugger
+  debug: 
+    msg: "{{ command_result }}"
