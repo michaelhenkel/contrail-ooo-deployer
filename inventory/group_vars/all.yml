@@ -18,5 +18,7 @@ SATELLITE_ORG: Juniper
 OPENSTACK_VERSION: ocata
 ROOT_SSH_KEY: /root/.ssh/id_rsa.pub
 STACK_SSH_KEY: /home/stack/.ssh/id_rsa.pub
-CONTRAIL_PACKAGE_LOCATION: http://10.84.5.120/github-build/R4.0/32/redhat70/ocata/artifacts
+CONTRAIL_VERSION: 4.0.1.0
+CONTRAIL_VERSION_BUILD: 32
+CONTRAIL_PACKAGE_LOCATION: http://10.0.0.2/
 CONTRAIL_PACKAGE_NAME: contrail-install-packages_4.0.1.0-32-ocata.tgz
