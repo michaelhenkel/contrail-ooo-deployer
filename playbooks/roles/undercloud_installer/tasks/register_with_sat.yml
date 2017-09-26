@@ -1,0 +1,18 @@
+---
+- name: add local satellite to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ SATELLITE_IP }} {{ SATELLITE_FQDN }}"
+
+- name: get satellite key
+  get_url:
+    url: http://{{ SATELLITE_FQDN }}/pub/katello-ca-consumer-latest.noarch.rpm
+    dest: /tmp/katello-ca-consumer-latest.noarch.rpm
+
+- name: install key
+  yum:
+    name: /tmp/katello-ca-consumer-latest.noarch.rpm
+    state: present
+
+- name: register with Satellite
+  command: subscription-manager register --activationkey={{ SATELLITE_KEY }} --org={{ SATELLITE_ORG }}

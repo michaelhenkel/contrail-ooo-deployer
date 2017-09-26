@@ -1,0 +1,6 @@
+---
+#- name: build image
+#  include: build_image.yml
+
+- name: register undercloud host
+  include: add_undercloud_host.yml

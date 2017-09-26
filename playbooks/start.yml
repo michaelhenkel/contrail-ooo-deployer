@@ -1,0 +1,10 @@
+---
+- hosts:
+  - localhost
+  roles:
+  - image_builder
+
+- hosts: 
+  - undercloud
+  roles:
+  - undercloud_installer

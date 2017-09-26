@@ -1,0 +1,10 @@
+---
+- name: register undercloud with satelitte
+  include: register_with_sat.yml
+  when: SATELLITE_FQDN and SATELLITE_IP
+
+- name: enable repositories
+  include: enable_repos.yml
+
+- name: install software
+  include: install_software.yml
