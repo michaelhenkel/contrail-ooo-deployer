@@ -1,0 +1,8 @@
+---
+- name: Get undercloud dhcp address
+  shell: /usr/bin/virsh domifaddr {{ UNDERCLOUD_NAME }} | grep ipv4 | tr  '/' ' ' |awk '{print $4}'
+  register: undercloud_ip
+
+- add_host:
+    name: "{{ undercloud_ip.stdout_lines[0] }}"
+    groups: undercloud

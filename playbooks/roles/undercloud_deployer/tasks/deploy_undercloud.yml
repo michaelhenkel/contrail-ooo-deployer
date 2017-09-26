@@ -1,0 +1,5 @@
+---
+- name: copy undercloud config
+  copy:
+    src: /usr/share/instack-undercloud/undercloud.conf.sample
+    dest: /home/stack/undercloud.conf

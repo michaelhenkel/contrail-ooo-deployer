@@ -1,0 +1,21 @@
+---
+- name: install tripleo client
+  yum:
+    name: python-tripleoclient
+    state: latest
+
+- name: get contrail packages
+  get_url:
+    url: "{{ CONTRAIL_PACKAGE_LOCATION }}/{{ CONTRAIL_PACKAGE_NAME }}"
+    dest: /tmp/{{ CONTRAIL_PACKAGE_NAME }}
+
+- name: create contrail repo directory
+  file:
+    path: /var/www/html/contrail
+    state: directory
+    mode: 0755
+
+- name: extract contrail package
+  unarchive:
+    src: /tmp/{{ CONTRAIL_PACKAGE_NAME }}
+    dest: /var/www/html/contrail
