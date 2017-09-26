@@ -3,3 +3,6 @@
   copy:
     src: /usr/share/instack-undercloud/undercloud.conf.sample
     dest: /home/stack/undercloud.conf
+
+- name: deploy the thing
+  command: /usr/bin/openstack undercloud install

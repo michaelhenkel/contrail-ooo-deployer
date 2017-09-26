@@ -1,0 +1,8 @@
+---
+#- name: undercloud deploy
+#  include: deploy_undercloud.yml
+
+- name: import ironic
+  include: import_ironic.yml
+  with_items:
+    - "{{ ironic_nodes }}"
