@@ -1,0 +1,49 @@
+resource_registry:
+{% for key, value in static_ips.items() %}
+{% if key != 'ExternalVip' and key != 'InternalApiVip' %}
+{% if 'external' in value %}
+  OS::TripleO::{{ key }}::Ports::ExternalPort: ../network/ports/external_from_pool.yaml
+{% endif %}
+{% if 'internal_api' in value %}
+  OS::TripleO::{{ key }}::Ports::InternalApiPort: ../network/ports/internal_api_from_pool.yaml
+{% endif %}
+{% if 'Storage' in value %}
+  OS::TripleO::{{ key }}::Ports::StoragePort: ../network/ports/storage_from_pool.yaml
+{% endif %}
+{% if 'StorageMgmt' in value %}
+  OS::TripleO::{{ key }}::Ports::StorageMgmtPort: ../network/ports/storage_mgmt_from_pool.yaml
+{% endif %}
+{% if 'Tenant' in value %}
+  OS::TripleO::{{ key }}::Ports::TenantPort: ../network/ports/tenant_from_pool.yaml
+{% endif %}
+{% if 'Management' in value %}
+  OS::TripleO::{{ key }}::Ports::ManagementPort: ../network/ports/management_from_pool.yaml
+{% endif %}
+{% endif %}
+{% endfor %}
+
+parameter_defaults:
+{% for key, value in static_ips.items() %}
+{% if key == 'ExternalVip' %}
+  PublicVirtualFixedIPs:
+    - ip_address: {{ value }}
+{% endif %}
+{% if key == 'ExternalVip' %}
+  InternalApiVirtualFixedIPs:
+    - ip_address: {{ value }}
+{% endif %}
+{% if key != 'ExternalVip' and key != 'InternalApiVip' %}
+{% if key == 'Compute' %}
+{% set role = 'NovaCompute' %}
+{% else %}
+{% set role = key %}
+{% endif %}
+  {{ role }}IPs:
+{% for key2, value2 in value.items() %}
+    {{ key2 }}:
+{% for ip in value2 %}
+    - {{ ip }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}

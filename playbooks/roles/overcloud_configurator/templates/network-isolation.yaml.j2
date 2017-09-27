@@ -1,0 +1,125 @@
+# Enable the creation of Neutron networks for isolated Overcloud
+# traffic and configure each role to assign ports (related
+# to that role) on these networks.
+resource_registry:
+{% for network in contrail_networks %}
+{% if network.keys()[0] == 'External' %}
+  OS::TripleO::Network::External: ../network/external.yaml
+  OS::TripleO::Network::Ports::ExternalVipPort: ../network/ports/external.yaml
+  OS::TripleO::Network::Ports::RedisVipPort: ../network/ports/vip.yaml
+{% endif %}
+{% if network.keys()[0] == 'InternalApi' %}
+  OS::TripleO::Network::InternalApi: ../network/internal_api.yaml
+  OS::TripleO::Network::Ports::InternalApiVipPort: ../network/ports/internal_api.yaml
+{% endif %}
+{% if network.keys()[0] == 'StorageMgmt' %}
+  OS::TripleO::Network::StorageMgmt: ../network/storage_mgmt.yaml
+  OS::TripleO::Network::Ports::StorageMgmtVipPort: ../network/ports/storage_mgmt.yaml
+{% endif %}
+{% if network.keys()[0] == 'Storage' %}
+  OS::TripleO::Network::Storage: ../network/storage.yaml
+  OS::TripleO::Network::Ports::StorageVipPort: ../network/ports/storage.yaml
+{% endif %}
+{% if network.keys()[0] == 'Tenant' %}
+  OS::TripleO::Network::Tenant: ../network/tenant.yaml
+{% endif %}
+{% if network.keys()[0] == 'Management' %}
+{% endif %}
+  OS::TripleO::Network::Management: ../network/management.yaml
+{% endfor %}
+
+
+{% for nic in controller_nic_layout %}
+{% if 'Network' in nic.values()[0] %}
+{% if nic.values()[0].Network == 'External' %}
+  OS::TripleO::Controller::Ports::ExternalPort: ../network/ports/external.yaml
+  OS::TripleO::CephStorage::Ports::ExternalPort: ../network/ports/noop.yaml
+  OS::TripleO::SwiftStorage::Ports::ExternalPort: ../network/ports/noop.yaml
+  OS::TripleO::BlockStorage::Ports::ExternalPort: ../network/ports/noop.yaml
+  OS::TripleO::ContrailController::Ports::ExternalPort: ../network/ports/external.yaml
+  OS::TripleO::ContrailAnalytics::Ports::ExternalPort: ../network/ports/external.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Ports::ExternalPort: ../network/ports/external.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'InternalApi' %}
+  OS::TripleO::Controller::Ports::RedisVipPort: ../network/ports/vip.yaml
+  OS::TripleO::Controller::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::CephStorage::Ports::InternalApiPort: ../network/ports/noop.yaml
+  OS::TripleO::SwiftStorage::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::BlockStorage::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::ContrailController::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::ContrailAnalytics::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'Storage' %}
+  OS::TripleO::Controller::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::CephStorage::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::SwiftStorage::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::BlockStorage::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::ContrailController::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::ContrailAnalytics::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Ports::StoragePort: ../network/ports/storage.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'StorageMgmt' %}
+  OS::TripleO::Controller::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::CephStorage::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::SwiftStorage::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::BlockStorage::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::ContrailController::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::ContrailAnalytics::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'Tenant' %}
+  OS::TripleO::Controller::Ports::TenantPort: ../network/ports/tenant.yaml
+  OS::TripleO::CephStorage::Ports::TenantPort: ../network/ports/noop.yaml
+  OS::TripleO::SwiftStorage::Ports::TenantPort: ../network/ports/noop.yaml
+  OS::TripleO::BlockStorage::Ports::TenantPort: ../network/ports/noop.yaml
+  OS::TripleO::ContrailController::Ports::TenantPort: ../network/ports/tenant.yaml
+  OS::TripleO::ContrailAnalytics::Ports::TenantPort: ../network/ports/tenant.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Ports::TenantPort: ../network/ports/tenant.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'Management' %}
+  OS::TripleO::Controller::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::CephStorage::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::SwiftStorage::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::BlockStorage::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::ContrailController::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::ContrailAnalytics::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Ports::ManagementPort: ../network/ports/management.yaml
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% for nic in compute_nic_layout %}
+{% if 'Network' in nic.values()[0] %}
+{% if nic.values()[0].Network == 'External' %}
+  OS::TripleO::Compute::Ports::ExternalPort: ../network/ports/external.yaml
+  OS::TripleO::ContrailTsn::Ports::ExternalPort: ../network/ports/external.yaml
+  OS::TripleO::ContrailDpdk::Ports::ExternalPort: ../network/ports/external.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'InternalApi' %}
+  OS::TripleO::Compute::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::ContrailTsn::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+  OS::TripleO::ContrailDpdk::Ports::InternalApiPort: ../network/ports/internal_api.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'Storage' %}
+  OS::TripleO::Compute::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::ContrailTsn::Ports::StoragePort: ../network/ports/storage.yaml
+  OS::TripleO::ContrailDpdk::Ports::StoragePort: ../network/ports/storage.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'StorageMgmt' %}
+  OS::TripleO::Compute::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::ContrailTsn::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+  OS::TripleO::ContrailDpdk::Ports::StorageMgmtPort: ../network/ports/storage_mgmt.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'Tenant' %}
+  OS::TripleO::Compute::Ports::TenantPort: ../network/ports/tenant.yaml
+  OS::TripleO::ContrailTsn::Ports::TenantPort: ../network/ports/tenant.yaml
+  OS::TripleO::ContrailDpdk::Ports::TenantPort: ../network/ports/tenant.yaml
+{% endif %}
+{% if nic.values()[0].Network == 'Management' %}
+  OS::TripleO::Compute::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::ContrailTsn::Ports::ManagementPort: ../network/ports/management.yaml
+  OS::TripleO::ContrailDpdk::Ports::ManagementPort: ../network/ports/management.yaml
+{% endif %}
+{% endif %}
+{% endfor %}

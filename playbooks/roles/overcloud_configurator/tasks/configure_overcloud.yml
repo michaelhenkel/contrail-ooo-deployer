@@ -29,3 +29,13 @@
   template:
     src: contrail-nic-config-compute.yaml.j2
     dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-nic-config-compute.yaml
+
+- name: create network-isolation.yaml.j2
+  template:
+    src: network-isolation.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/environments/network-isolation.yaml
+
+- name: create ips-from-pool-all.yaml.j2
+  template:
+    src: ips-from-pool-all.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/environments/ips-from-pool-all.yaml
