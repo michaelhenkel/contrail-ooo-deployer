@@ -5,8 +5,11 @@ This ansible playbook
 - installs the undercloud    
 - configures the undercloud    
 - configures the overcloud    
--- networking    
--- nic template    
+-  networking    
+-  nic template    
+After successful run of the playbook, all required templates will be generated.    
+Stack deploy is not yet executed automatically.    
+
 ## pre-requisites
 The undercloud is installed as a VM. The ansible playbook should be    
 executed on the KVM host hosting the undercloud VM.    
