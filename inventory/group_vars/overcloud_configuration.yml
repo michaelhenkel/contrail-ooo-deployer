@@ -107,3 +107,46 @@ compute_nic_layout:
 - vlan40:
     Network: StorageMgmt
     VlanParent: nic3
+
+static_ips:
+  ExternalVip: 10.2.0.10
+  InternalApiVip: 10.0.0.10
+  Controller:
+    internal_api:
+    - 10.0.0.20
+    - 10.0.0.21
+    - 10.0.0.22
+  Compute:
+    internal_api:
+    - 10.0.0.30
+    - 10.0.0.31
+    - 10.0.0.32
+    - 10.0.0.33
+    - 10.0.0.34
+    - 10.0.0.35
+    - 10.0.0.36
+  ContrailController:
+    internal_api:
+    - 10.0.0.40
+    - 10.0.0.41
+    - 10.0.0.42
+  ContrailAnalytics:
+    internal_api:
+    - 10.0.0.50
+    - 10.0.0.51
+    - 10.0.0.52
+  ContrailAnalyticsDatabase:
+    internal_api:
+    - 10.0.0.60
+    - 10.0.0.61
+    - 10.0.0.62
+  ContrailTsn:
+    internal_api:
+    - 10.0.0.70
+    - 10.0.0.71
+    - 10.0.0.72
+  ContrailDpdk:
+    internal_api:
+    - 10.0.0.80
+    - 10.0.0.81
+    - 10.0.0.82
