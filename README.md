@@ -1,4 +1,12 @@
 # Install OSP10/11 with Contrail 3.2.x/4.0.x the easy way
+## What it does
+This ansible playbook    
+- creates the undercloud VM
+- installs the undercloud    
+- configures the undercloud    
+- configures the overcloud
+-- networking    
+-- nic template    
 ## pre-requisites
 The undercloud is installed as a VM. The ansible playbook should be    
 executed on the KVM host hosting the undercloud VM.    
