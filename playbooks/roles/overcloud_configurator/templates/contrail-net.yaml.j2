@@ -11,7 +11,11 @@ parameter_defaults:
 {% for network in contrail_networks %}
   {{ network.keys()[0] }}NetCidr: {{ network.values()[0].Prefix }}/{{ network.values()[0].PrefixLength }}
 {% if 'Gateway' in network.values()[0] %}
+{% if network.keys()[0] == 'Management' %}
+  {{ network.keys()[0] }}InterfaceDefaultRoute: {{ network.values()[0].Gateway }}
+{% else %}
   {{ network.keys()[0] }}DefaultRoute: {{ network.values()[0].Gateway }}
+{% endif %}
 {% endif %}
 {% if 'AllocationStart' in network.values()[0] %}
   {{ network.keys()[0] }}AllocationPools: [{'start': '{{ network.values()[0].AllocationStart }}', 'end': '{{ network.values()[0].AllocationEnd }}'}]
