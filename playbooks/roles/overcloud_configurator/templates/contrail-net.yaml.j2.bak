@@ -1,0 +1,40 @@
+resource_registry:
+  OS::TripleO::Controller::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
+  OS::TripleO::ContrailController::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
+  OS::TripleO::ContrailAnalytics::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
+  OS::TripleO::ContrailDpdk::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
+  OS::TripleO::ContrailTsn::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
+
+parameter_defaults:
+{% for network in contrail_networks %}
+  {{ network.keys()[0] }}NetCidr: {{ network.values()[0].Prefix }}/{{ network.values()[0].PrefixLength }}
+{% if network.values()[0].Gateway %}
+  {{ network.keys()[0] }}DefaultRoute: {{ network.values()[0]..Gateway }}
+{% endif %}
+{% if network.values()[0].AllocationStart %}
+  {{ network.keys()[0] }}AllocationPools: [{'start': '{{ network.values()[0].AllocationStart }}', 'end': '{{ network.values()[0].AllocationEnd }}'}]
+{% endif %}
+{% if network.values()[0].VlanId %}
+  {{ network.keys()[0] }}VlanID: network.values()[0].VlanId
+{% endif %}
+{% endfor %}
+  EC2MetadataIp: {{ EC2METADATAIP }}  # Generally the IP of the Undercloud
+  DnsServers: ["{{ DNS_SERVER"]
+  NtpServer: {{ NTP_SERVER }}
+  ContrailVrouterPhysicalInterface: {{ CONTRAIL_PHY_INT }}
+  ContrailVrouterGateway: {{ CONTRAIL_VROUTER_GW }}
+  ContrailVrouterNetmask: {{ CONTRAIL_VROUTER_NETMASK }}
+  ControlVirtualInterface: {{ CONTROLPLANE_INTERFACE }}
+  PublicVirtualInterface: {{ EXTERNAL_INTERFACE }}
+## If vhost0 is linked to a vlan interface:
+{% if VROUTER_PARENT_VLAN_INTERFACE %}
+  ContrailVlanParentInterface: {{ VROUTER_PARENT_VLAN_INTERFACE }}
+{% endif %}
+{% if VROUTER_BOND_INTERFACE %}
+  ContrailBondInterface: bond0
+{% endif %}
+{% if VROUTER_BOND_MEMBERS %}
+  ContrailBondInterfaceMembers: 'VROUTER_BOND_MEMBERS'
+{% endif %}
