@@ -245,3 +245,159 @@ ironic_nodes:
     ipmi_driver: pxe_ssh
 ```    
 This example imports a couple of nodes and adds profiling information to it (role)    
+
+### overcloud configuration
+```
+cat contrail-ooo-deployer/inventory/group_vars/overcloud_configuration.yml---
+OPENSTACK_CONTROLLER_COUNT: 3
+CONTRAIL_CONTROLLER_COUNT: 3
+CONTRAIL_ANALYTICS_COUNT: 3
+CONTRAIL_ANALYTICS_DB_COUNT: 3
+CONTRAIL_TSN_COUNT: 0
+COMPUTE_COUNT: 0
+COMPUTE_DPDK_COUNT: 4
+QEMU: true
+CONTRAIL_REPO: http://192.168.24.1/contrail
+EC2METADATAIP: 192.168.24.1
+DNS_SERVERS: 10.87.64.101
+NTP_SERVER: 10.0.0.1
+CONTRAIL_PHY_INTERFACE: eth1
+CONTRAIL_VROUTER_GW: 10.0.0.1
+CONTRAIL_VROUTER_NETMASK: 255.255.255.0
+CONTROLPLANE_INTERFACE: eth0
+EXTERNAL_INTERFACE: vlan10
+VROUTER_PARENT_VLAN_INTERFACE:
+VROUTER_BOND_INTERFACE:
+VROUTER_BOND_MEMBERS:
+contrail_networks:
+- ControlPlane:
+    PrefixLength: 24
+    Prefix: 192.168.24.0
+- InternalApi:
+    PrefixLength: 24
+    Prefix: 10.0.0.0
+    Gateway: 10.0.0.1
+    VlanId: 1
+    AllocationStart: 10.0.0.11
+    AllocationEnd: 10.0.0.200
+- External:
+    PrefixLength: 24
+    Prefix: 10.1.0.0
+    VlanId: 10
+    AllocationStart: 10.1.0.11
+    AllocationEnd: 10.1.0.200
+- Management:
+    PrefixLength: 24
+    Prefix: 10.2.0.0
+    VlanId: 20
+    AllocationStart: 10.2.0.11
+    AllocationEnd: 10.2.0.200
+- Storage:
+    PrefixLength: 24
+    Prefix: 10.3.0.0
+    VlanId: 30
+    AllocationStart: 10.3.0.11
+    AllocationEnd: 10.3.0.200
+- StorageMgmt:
+    PrefixLength: 24
+    Prefix: 10.4.0.0
+    VlanId: 40
+    AllocationStart: 10.4.0.11
+    AllocationEnd: 10.4.0.200
+controller_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.168.24.1
+    DnsServer: true
+- nic2:
+    Network: InternalApi
+    Routes:
+      - default: true
+- nic3:
+    Network: None
+- vlan10:
+    Network: External
+    VlanParent: nic3
+- vlan20:
+    Network: Management
+    VlanParent: nic3
+- vlan30:
+    Network: Storage
+    VlanParent: nic3
+- vlan40:
+    Network: StorageMgmt
+    VlanParent: nic3
+
+compute_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.168.24.1
+    DnsServer: true
+- nic2:
+    Network: None
+- vhost0:
+    Network: InternalApi
+    Routes:
+      - default: true
+- nic3:
+    Network: None
+- vlan10:
+    Network: External
+    VlanParent: nic3
+- vlan20:
+    Network: Management
+    VlanParent: nic3
+- vlan30:
+    Network: Storage
+    VlanParent: nic3
+- vlan40:
+    Network: StorageMgmt
+    VlanParent: nic3
+
+static_ips:
+  ExternalVip: 10.2.0.10
+  InternalApiVip: 10.0.0.10
+  Controller:
+    internal_api:
+    - 10.0.0.20
+    - 10.0.0.21
+    - 10.0.0.22
+  Compute:
+    internal_api:
+    - 10.0.0.30
+    - 10.0.0.31
+    - 10.0.0.32
+    - 10.0.0.33
+    - 10.0.0.34
+    - 10.0.0.35
+    - 10.0.0.36
+  ContrailController:
+    internal_api:
+    - 10.0.0.40
+    - 10.0.0.41
+    - 10.0.0.42
+  ContrailAnalytics:
+    internal_api:
+    - 10.0.0.50
+    - 10.0.0.51
+    - 10.0.0.52
+  ContrailAnalyticsDatabase:
+    internal_api:
+    - 10.0.0.60
+    - 10.0.0.61
+    - 10.0.0.62
+  ContrailTsn:
+    internal_api:
+    - 10.0.0.70
+    - 10.0.0.71
+    - 10.0.0.72
+  ContrailDpdk:
+    internal_api:
+    - 10.0.0.80
+    - 10.0.0.81
+    - 10.0.0.82
+```
