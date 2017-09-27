@@ -9,7 +9,7 @@ This ansible playbook
     - nic template   
     - static ip list    
 
-All configuration is done in three configuration files.    
+  All configuration is done in three configuration files.    
 After successful run of the playbook, all required templates will be generated.    
 Stack deploy is not yet executed automatically.    
 

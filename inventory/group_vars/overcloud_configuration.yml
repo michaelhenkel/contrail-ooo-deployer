@@ -39,6 +39,7 @@ contrail_networks:
 - Management:
     PrefixLength: 24
     Prefix: 10.2.0.0
+    Gateway: 10.2.0.1
     VlanId: 20
     AllocationStart: 10.2.0.11
     AllocationEnd: 10.2.0.200
