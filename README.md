@@ -4,7 +4,7 @@ This ansible playbook
 - creates the undercloud VM
 - installs the undercloud    
 - configures the undercloud    
-- configures the overcloud
+- configures the overcloud    
 -- networking    
 -- nic template    
 ## pre-requisites
