@@ -1,20 +1,69 @@
 ---
-- name: import ironic nodes
-  command: |
+- name: import ironic nodes with pxe ssh
+  shell: |
+    source /home/stack/stackrc &&
     /bin/ironic node-create \
-    -d pxe_ssh \
-    -p cpus=4 \
-    -p memory_mb=16348 \
-    -p local_gb=40 
+    -d {{ item.value.ipmi_driver }} \
+    -p cpus={{ item.value.cpus }} \
+    -p memory_mb={{ item.value.memory }} \
+    -p local_gb={{ item.value.disk_gb }} \
     -p cpu_arch=x86_64 \
-    -i ssh_username="{{ item.value.user }}" \
+    -i ssh_username={{ item.value.user }} \
     -i ssh_virt_type=virsh \
-    -i ssh_address="{{ item.value.ip }}" \
-    -i ssh_password="{{ item.value.password }}" \
-    -n "{{ item.key }}" \
-    -p capabilities=profile:"{{ item.role }}" | tail -2|awk '{print $4}'
-  register: command_result
+    -i ssh_address={{ item.value.ip }} \
+    -i ssh_password={{ item.value.password }} \
+    -n {{ item.key }} \
+    -p capabilities=profile:{{ item.value.role }} | tail -2|awk '{print $4}'
+  register: node_create_result_pxe_ssh
+  when: item.value.ipmi_driver == 'pxe_ssh'
 
-- name: debugger
+- name: import ironic nodes with ipmi pxe
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/ironic node-create \
+    -d {{ item.value.ipmi_driver }} \
+    -p cpus={{ item.value.cpus }} \
+    -p memory_mb={{ item.value.memory }} \
+    -p local_gb={{ item.value.disk_gb }} \
+    -p cpu_arch=x86_64 \
+    -i ipmi_username={{ item.value.user }} \
+    -i ipmi_address={{ item.value.ip }} \
+    -i ipmi_password={{ item.value.password }} \
+    -n {{ item.key }} \
+    -p capabilities=profile:{{ item.value.role }} | tail -2|awk '{print $4}'
+  register: node_create_result_ipmi
+  when: item.value.ipmi_driver == 'ipmi'
+
+- name: node_create_result pxe ssh
   debug: 
-    msg: "{{ command_result }}"
+    msg: "{{ node_create_result_pxe_ssh }}"
+  when: item.value.ipmi_driver == 'pxe_ssh'
+
+- name: create ironic port pxe ssh
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/ironic port-create -a {{ item.value.mac }} -n {{ node_create_result_pxe_ssh.stdout_lines[0] }}
+  register: port_create_result_pxe_ssh
+  when: item.value.ipmi_driver == 'pxe_ssh'
+
+- name: port_create_result pxe ssh
+  debug: 
+    msg: "{{ port_create_result_pxe_ssh.stdout_lines }}"
+  when: item.value.ipmi_driver == 'pxe_ssh'
+
+- name: node_create_result ipmi
+  debug:
+    msg: "{{ node_create_result_ipmi.stdout_lines }}"
+  when: item.value.ipmi_driver == 'ipmi'
+
+- name: create ironic port ipmi
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/ironic port-create -a {{ item.value.mac }} -n {{ node_create_result_ipmi.stdout_lines[0] }}
+    register: port_create_result_ipmi
+  when: item.value.ipmi_driver == 'ipmi'
+
+- name: port_create_result ipmi
+  debug:
+    msg: "{{ port_create_result_ipmi.stdout_lines }}"
+  when: item.value.ipmi_driver == 'ipmi'

@@ -1,0 +1,3 @@
+---
+- name: configure overcloud services
+  include: configure_overcloud.yml

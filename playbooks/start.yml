@@ -1,18 +1,26 @@
 ---
-- hosts:
-  - localhost
-  roles:
-  - image_builder
+#- hosts:
+#  - localhost
+#  roles:
+#  - image_builder
 
-- hosts: 
-  - undercloud
-  roles:
-  - undercloud_installer
+#- hosts: 
+#  - undercloud
+#  roles:
+#  - undercloud_installer
+
+#- hosts: 
+#  - undercloud
+#  user: stack
+#  roles:
+#  - undercloud_deployer
+#  vars_files:
+#  - ../inventory/group_vars/ironic_nodes.yml
 
 - hosts: 
   - undercloud
   user: stack
   roles:
-  - undercloud_deployer
+  - overcloud_configurator
   vars_files:
-  - ../inventory/group_vars/ironic_nodes.yml
+  - ../inventory/group_vars/overcloud_configuration.yml

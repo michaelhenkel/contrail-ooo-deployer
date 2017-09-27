@@ -1,0 +1,12 @@
+---
+- name: create nova flavors
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/openstack flavor create {{ item }} --ram 4096 --vcpus 1 --disk 40 &&
+    /bin/openstack flavor set --property "capabilities:boot_option"="local" --property "capabilities:profile"="{{ item }}" {{ item }} 
+  with_items:
+    - contrail-controller
+    - contrail-analytics
+    - contrail-analytics-database
+    - contrail-tsn
+    - contrail-dpdk

@@ -78,3 +78,12 @@
     sleep: 10
   delegate_to: localhost
 
+- name: get rhosp-director-images
+  yum:
+    name: rhosp-director-images
+    state: latest
+
+- name: get rhosp-director-images-ipa
+  yum:
+    name: rhosp-director-images
+    state: latest

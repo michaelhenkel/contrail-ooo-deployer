@@ -1,0 +1,80 @@
+---
+- name: create images directory
+  file:
+    path: /home/stack/images
+    state: directory
+    mode: 0755
+
+- name: find overcloud images
+  find:
+    paths: /usr/share/rhosp-director-images
+    patterns: "*latest*.tar"
+    recurse: "yes"
+    file_type: "link"
+  register: found_images
+
+- name: show images
+  debug:
+    msg: "{{ item.path }}"
+  with_items:
+    - "{{ found_images.files }}"
+
+- name: copy overcloud images
+  copy:
+    src: "{{ item.path }}"
+    dest: /home/stack/images
+    owner: "stack"
+    remote_src: yes
+  with_items:
+    - "{{ found_images.files }}"
+
+- name: find copied overcloud images
+  find:
+    paths: /home/stack/images
+    patterns: "*latest*.tar"
+    recurse: "yes"
+    file_type: "file"
+  register: copied_images
+
+- name: extract images
+  unarchive:
+    src: "{{ item.path }}"
+    dest: /home/stack/images
+    remote_src: true
+  with_items:
+    - "{{ copied_images.files }}"
+
+- name: upload images to glance
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/openstack overcloud image upload --image-path /home/stack/images/
+
+- name: get ironic uuid list
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/openstack baremetal node list -c UUID -f value
+  register: ironic_uuid_list
+
+- name: set ironic node power stat
+  shell: |
+    source /home/stack/stackrc && 
+    /bin/openstack baremetal node power off {{ item }}
+  with_items:
+    - "{{ ironic_uuid_list.stdout_lines }}"
+
+- name: configure boot mode for ironic nodes
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/openstack baremetal configure boot
+
+- name: set ironic node managable stat
+  shell: |
+    source /home/stack/stackrc && 
+    /bin/openstack baremetal node manage {{ item }}
+  with_items:
+    - "{{ ironic_uuid_list.stdout_lines }}"
+
+- name: start introspection
+  shell: |
+    source /home/stack/stackrc &&
+    /bin/openstack overcloud node introspect --all-manageable --provide
