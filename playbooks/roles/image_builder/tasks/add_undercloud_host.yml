@@ -1,4 +1,8 @@
 ---
+- name: sleep for 30 seconds and continue with play
+  wait_for: timeout=40
+  delegate_to: localhost
+
 - name: Get undercloud dhcp address
   shell: /usr/bin/virsh domifaddr {{ UNDERCLOUD_NAME }} | grep ipv4 | tr  '/' ' ' |awk '{print $4}'
   register: undercloud_ip

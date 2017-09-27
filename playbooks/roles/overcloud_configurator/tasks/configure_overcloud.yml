@@ -1,24 +1,24 @@
 ---
-#- name: copy ooo templates
-#  command: cp -r /usr/share/openstack-tripleo-heat-templates/ /home/stack/tripleo-heat-templates
+- name: copy ooo templates
+  command: cp -r /usr/share/openstack-tripleo-heat-templates/ /home/stack/tripleo-heat-templates
 
-#- name: copy contrail env templates
-#  command: rsync -a /usr/share/contrail-tripleo-heat-templates/ /home/stack/tripleo-heat-templates/
+- name: copy contrail env templates
+  command: rsync -a /usr/share/contrail-tripleo-heat-templates/ /home/stack/tripleo-heat-templates/
 
-#- name: create contrail-service.yml
-#  template:
-#    src: contrail-services.yaml.j2
-#    dest: /home/stack/tripleo-heat-templates/environments/contrail/contrail-services.yaml
+- name: create contrail-service.yml
+  template:
+    src: contrail-services.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/environments/contrail/contrail-services.yaml
 
-#- name: create environment-rhel-registration.yaml
-#  template:
-#    src: environment-rhel-registration.yaml.j2
-#    dest: /home/stack/tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/environment-rhel-registration.yaml
+- name: create environment-rhel-registration.yaml
+  template:
+    src: environment-rhel-registration.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/environment-rhel-registration.yaml
 
-#- name: create contrail-net.yaml.j2
-#  template:
-#    src: contrail-net.yaml.j2
-#    dest: /home/stack/tripleo-heat-templates/environments/contrail/contrail-net.yaml
+- name: create contrail-net.yaml.j2
+  template:
+    src: contrail-net.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/environments/contrail/contrail-net.yaml
 
 - name: create contrail-nic-config.yaml
   template:

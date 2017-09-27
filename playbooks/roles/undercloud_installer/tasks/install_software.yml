@@ -17,6 +17,7 @@
 
 - name: start apache
   service:
+    enabled: yes
     name: httpd
     state: started
 
@@ -74,7 +75,7 @@
     port: 22
     state: started
     host: '{{ ansible_ssh_host | default(inventory_hostname) }}'
-    delay: 120
+    delay: 30
     sleep: 10
   delegate_to: localhost
 
