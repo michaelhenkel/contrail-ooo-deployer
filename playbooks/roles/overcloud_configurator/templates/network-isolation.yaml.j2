@@ -1,6 +1,3 @@
-# Enable the creation of Neutron networks for isolated Overcloud
-# traffic and configure each role to assign ports (related
-# to that role) on these networks.
 resource_registry:
 {% for network in contrail_networks %}
 {% if network.keys()[0] == 'External' %}
