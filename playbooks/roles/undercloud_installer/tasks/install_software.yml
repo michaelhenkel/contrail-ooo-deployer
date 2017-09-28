@@ -5,6 +5,27 @@
     state: present
     key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
 
+- name: yum update all
+  yum:
+    name: '*'
+    state: latest
+
+- name: restart undercloud
+  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+  async: 1
+  poll: 0
+  become: true
+  ignore_errors: true
+
+- name: wait for server {{ ansible_ssh_host | default(inventory_hostname) }} to come back online
+  wait_for:
+    port: 22
+    state: started
+    host: '{{ ansible_ssh_host | default(inventory_hostname) }}'
+    delay: 30
+    sleep: 10
+  delegate_to: localhost
+
 - name: install tripleo client
   yum:
     name: python-tripleoclient
@@ -57,27 +78,6 @@
     name: contrail-tripleo-puppet
     state: latest
     disable_gpg_check: yes
-
-- name: yum update all
-  yum:
-    name: '*'
-    state: latest
-
-- name: restart undercloud
-  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
-  async: 1
-  poll: 0
-  become: true
-  ignore_errors: true
-
-- name: wait for server {{ ansible_ssh_host | default(inventory_hostname) }} to come back online
-  wait_for:
-    port: 22
-    state: started
-    host: '{{ ansible_ssh_host | default(inventory_hostname) }}'
-    delay: 30
-    sleep: 10
-  delegate_to: localhost
 
 - name: get rhosp-director-images
   yum:

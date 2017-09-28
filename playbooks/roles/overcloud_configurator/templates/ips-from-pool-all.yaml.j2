@@ -28,7 +28,7 @@ parameter_defaults:
   PublicVirtualFixedIPs:
     - ip_address: {{ value }}
 {% endif %}
-{% if key == 'ExternalVip' %}
+{% if key == 'InternalApiVip' %}
   InternalApiVirtualFixedIPs:
     - ip_address: {{ value }}
 {% endif %}

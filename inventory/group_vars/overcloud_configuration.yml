@@ -4,8 +4,8 @@ CONTRAIL_CONTROLLER_COUNT: 3
 CONTRAIL_ANALYTICS_COUNT: 3
 CONTRAIL_ANALYTICS_DB_COUNT: 3
 CONTRAIL_TSN_COUNT: 0
-COMPUTE_COUNT: 0
-COMPUTE_DPDK_COUNT: 4
+COMPUTE_COUNT: 3
+COMPUTE_DPDK_COUNT: 0
 QEMU: true
 CONTRAIL_REPO: http://192.168.24.1/contrail
 EC2METADATAIP: 192.168.24.1
@@ -23,6 +23,7 @@ contrail_networks:
 - ControlPlane:
     PrefixLength: 24
     Prefix: 192.168.24.0
+    Gateway: 192.168.24.1
 - InternalApi:
     PrefixLength: 24
     Prefix: 10.0.0.0
@@ -34,6 +35,7 @@ contrail_networks:
     PrefixLength: 24
     Prefix: 10.1.0.0
     VlanId: 10
+    Gateway: 10.1.0.1
     AllocationStart: 10.1.0.11
     AllocationEnd: 10.1.0.200
 - Management:
@@ -47,11 +49,13 @@ contrail_networks:
     PrefixLength: 24
     Prefix: 10.3.0.0
     VlanId: 30
+    Gateway: 10.3.0.1
     AllocationStart: 10.3.0.11
     AllocationEnd: 10.3.0.200
 - StorageMgmt:
     PrefixLength: 24
     Prefix: 10.4.0.0
+    Gateway: 10.4.0.1
     VlanId: 40
     AllocationStart: 10.4.0.11
     AllocationEnd: 10.4.0.200
@@ -110,7 +114,7 @@ compute_nic_layout:
     VlanParent: nic3
 
 static_ips:
-  ExternalVip: 10.2.0.10
+  ExternalVip: 10.1.0.10
   InternalApiVip: 10.0.0.10
   Controller:
     internal_api:
