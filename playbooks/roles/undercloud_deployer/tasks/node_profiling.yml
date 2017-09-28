@@ -9,4 +9,4 @@
     - contrail-analytics
     - contrail-analytics-database
     - contrail-tsn
-    - contrail-dpdk
+    - compute-dpdk

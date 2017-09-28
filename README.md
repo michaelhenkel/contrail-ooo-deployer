@@ -37,8 +37,8 @@ General parameters are defined in
 ```
 cat contrail-ooo-deployer/inventory/group_vars/all.yml
 ---
-RHEL_VERSION: 7.4
-RHEL_QCOW: /root/rhel-server-7.4-x86_64-kvm.qcow2
+RHEL_VERSION: 7.4 # Usually we want to use the latest, which is 7.4
+RHEL_QCOW: /root/rhel-server-7.4-x86_64-kvm.qcow2 # the RHEL guest image must be downloaded manually
 IMAGE_DIRECTORY: /var/lib/libvirt/images
 UNDERCLOUD_IMAGE_SIZE: 100G
 UNDERCLOUD_NAME: ocataX
@@ -66,16 +66,16 @@ CONTRAIL_PACKAGE_LOCATION: http://10.0.0.2/
 cat contrail-ooo-deployer/inventory/group_vars/ironic_nodes.yml
 ---
 ironic_nodes:
-  control-1-at-5b3s30:
-    ip: 10.87.64.31
-    mac: 52:54:00:16:54:d8
-    role: control
-    user: root
-    password: c0ntrail123
-    memory: 16348
+  control-1-at-5b3s30:      # name of ironic node
+    ip: 10.87.64.31         # ip of the ipmi
+    mac: 52:54:00:16:54:d8  # mac of the prov interface
+    role: control           # overcloud role
+    user: root              # ipmi user
+    password: c0ntrail123   # ipmi password
+    memory: 16348           
     cpus: 4
     disk_gb: 40
-    ipmi_driver: pxe_ssh
+    ipmi_driver: pxe_ssh   # ipmi driver
   compute-1-at-5b3s30:
     ip: 10.87.64.31
     mac: 52:54:00:2a:7d:99

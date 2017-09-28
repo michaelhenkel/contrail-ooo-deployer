@@ -10,6 +10,9 @@ resource_registry:
 parameter_defaults:
 {% for network in contrail_networks %}
   {{ network.keys()[0] }}NetCidr: {{ network.values()[0].Prefix }}/{{ network.values()[0].PrefixLength }}
+{% if network.keys()[0] == 'ControlPlane' %}
+  ControlPlaneSubnetCidr: '{{ network.values()[0].PrefixLength }}'
+{% endif %}
 {% if 'Gateway' in network.values()[0] %}
 {% if network.keys()[0] == 'Management' %}
   {{ network.keys()[0] }}InterfaceDefaultRoute: {{ network.values()[0].Gateway }}
