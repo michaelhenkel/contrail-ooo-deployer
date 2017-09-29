@@ -1,4 +1,4 @@
-heat_template_version: ocata
+heat_template_version: {{ OPENSTACK_VERSION }}
 
 description: >
   Software Config to drive os-net-config to configure multiple interfaces
@@ -81,6 +81,7 @@ parameters:
     description: The IP address of the EC2 metadata server.
     type: string
 
+{% if OPENSTACK_VERSION == 'ocata' %}}
 resources:
   OsNetConfigImpl:
     type: OS::Heat::SoftwareConfig
@@ -143,3 +144,58 @@ outputs:
     description: The OsNetConfigImpl resource.
     value:
       get_resource: OsNetConfigImpl
+{% else %}
+resources:
+  OsNetConfigImpl:
+    type: OS::Heat::StructuredConfig
+    properties:
+      group: os-apply-config
+      config:
+        os_net_config:
+          network_config:
+{% for nic in controller_nic_layout %}
+{% if 'vlan' in nic.keys()[0] %}
+{% set vlan_id = nic.keys()[0].split('vlan') %}
+              - type: vlan
+                device: {{ nic.values()[0].VlanParent }}
+                vlan_id: {{ vlan_id[1] }}
+{% else %}
+              - type: interface
+                name: {{ nic.keys()[0] }}
+{% endif %}
+                use_dhcp: false
+{% if 'DnsServer' in nic.values()[0] %}
+                dns_servers:
+                  get_param: DnsServers
+{% endif %}
+{% if 'Routes' in nic.values()[0] %}
+                routes:
+{% for routes in nic.values()[0].Routes %}
+{% if 'ip_netmask' in nic.values()[0].Routes[0] %}
+                - ip_netmask: {{ nic.values()[0].Routes[0].ip_netmask }}
+                  next_hop:
+                    {{ nic.values()[0].Routes[0].next_hop }}
+{% endif %}
+{% if 'default' in nic.values()[0].Routes[0] %}
+                - default: true
+                  next_hop:
+                    get_param: {{ nic.values()[0].Network }}DefaultRoute
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if 'Network' in nic.values()[0] %}
+{% if nic.values()[0].Network != 'None' %}
+                addresses:
+                - ip_netmask:
+{% if nic.values()[0].Network == 'ControlPlane' %}
+                    list_join:
+                      - '/'
+                      - - get_param: ControlPlaneIp
+                        - get_param: ControlPlaneSubnetCidr
+{% else %}
+                    get_param: {{ nic.values()[0].Network }}IpSubnet
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
