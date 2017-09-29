@@ -4,5 +4,47 @@
     src: /usr/share/instack-undercloud/undercloud.conf.sample
     dest: /home/stack/undercloud.conf
 
+- name: set undercloud local ip
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#local_ip.*'
+    line: 'local_ip = {{ UNDERCLOUD_IP }}/{{ UNDERCLOUD_PREFIX_LENGTH }}'
+
+- name: set undercloud network gateway
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#network_gateway.*'
+    line: 'network_gateway = {{ UNDERCLOUD_GATEWAY }}'
+
+- name: set undercloud network cidr
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#network_cidr.*'
+    line: 'network_cidr = {{ UNDERCLOUD_PREFIX }}/{{ UNDERCLOUD_PREFIX_LENGTH }}'
+
+- name: set undercloud masquerade network
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#masquerade_network.*'
+    line: 'masquerade_network = {{ UNDERCLOUD_PREFIX }}/{{ UNDERCLOUD_PREFIX_LENGTH }}'
+
+- name: set undercloud dhcp start
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#dhcp_start.*'
+    line: 'dhcp_start = {{ UNDERCLOUD_DHCP_START }}'
+
+- name: set undercloud dhcp end
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#dhcp_end.*'
+    line: 'dhcp_end = {{ UNDERCLOUD_DHCP_END }}'
+
+- name: set undercloud inspection range
+  lineinfile:
+    path: /home/stack/undercloud.conf
+    regexp: '^#inspection_iprange.*'
+    line: 'inspection_iprange = {{ UNDERCLOUD_INSPECTION_IP_RANGE }}'
+
 - name: deploy the thing
   command: /usr/bin/openstack undercloud install

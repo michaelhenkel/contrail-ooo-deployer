@@ -45,3 +45,9 @@
   template:
     src: ips-from-pool-all.yaml.j2
     dest: /home/stack/tripleo-heat-templates/environments/ips-from-pool-all.yaml
+
+- name: create create-stack.sh
+  template:
+    src: create-stack.sh.j2
+    dest: /home/stack/create-stack.sh
+    mode: 0755
