@@ -198,4 +198,8 @@ resources:
 {% endif %}
 {% endif %}
 {% endfor %}
+outputs:
+  OS::stack_id:
+    description: The OsNetConfigImpl resource.
+    value: {get_resource: OsNetConfigImpl}
 {% endif %}

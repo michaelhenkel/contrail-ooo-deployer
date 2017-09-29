@@ -57,6 +57,9 @@ RH_POOL_ID: $POOL_ID
 OPENSTACK_VERSION: ocata
 ROOT_SSH_KEY: /root/.ssh/id_rsa.pub
 STACK_SSH_KEY: /home/stack/.ssh/id_rsa.pub
+# The Contrail image must be in the format of
+# contrail-install-packages_${CONTRAILVERSION}_${CONTRAIL_VERSION_BUILD}-${OPENSTACK_VERSION}.tgz
+# ie. contrail-install-packages_3.2.6.0-51-newton.tgz
 CONTRAIL_VERSION: 4.0.1.0
 CONTRAIL_VERSION_BUILD: 32
 CONTRAIL_PACKAGE_LOCATION: http://10.0.0.2/
@@ -126,120 +129,10 @@ ironic_nodes:
     cpus: 4
     disk_gb: 40
     ipmi_driver: pxe_ssh
-  control-1-at-centos:
-    ip: 10.87.64.32
-    mac: 52:54:00:40:9e:13
-    role: control
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
   compute-dpdk-1-at-centos:
     ip: 10.87.64.32
     mac: 52:54:00:1d:58:4d
     role: compute-dpdk
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  compute-2-at-centos:
-    ip: 10.87.64.32
-    mac: 52:54:00:6d:89:2d
-    role: compute
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  contrail-controller-1-at-centos:
-    ip: 10.87.64.32
-    mac: 52:54:00:a8:46:5a
-    role: contrail-controller
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  contrail-analytics-1-at-centos:
-    ip: 10.87.64.32
-    mac: 52:54:00:b3:2f:7d
-    role: contrail-analytics
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  contrail-analytics-database-1-at-centos:
-    ip: 10.87.64.32
-    mac: 52:54:00:59:e3:10
-    role: contrail-analytics-database
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  control-1-at-5b3s32:
-    ip: 10.87.64.33
-    mac: 52:54:00:1d:8c:39
-    role: control
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  compute-1-at-5b3s32:
-    ip: 10.87.64.33
-    mac: 52:54:00:9c:4b:bf
-    role: compute
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  compute-2-at-5b3s32:
-    ip: 10.87.64.33
-    mac: 52:54:00:1d:a9:d9
-    role: compute
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  contrail-controller-1-at-5b3s32:
-    ip: 10.87.64.33
-    mac: 52:54:00:cd:59:92
-    role: contrail-controller
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  contrail-analytics-1-at-5b3s32:
-    ip: 10.87.64.33
-    mac: 52:54:00:2f:81:1a
-    role: contrail-analytics
-    user: root
-    password: c0ntrail123
-    memory: 16348
-    cpus: 4
-    disk_gb: 40
-    ipmi_driver: pxe_ssh
-  contrail-analytics-database-1-at-5b3s32:
-    ip: 10.87.64.33
-    mac: 52:54:00:a1:4a:23
-    role: contrail-analytics-database
     user: root
     password: c0ntrail123
     memory: 16348

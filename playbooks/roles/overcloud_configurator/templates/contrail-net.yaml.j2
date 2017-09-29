@@ -31,16 +31,22 @@ parameter_defaults:
   DnsServers: ["{{ DNS_SERVERS }}"]
   NtpServer: {{ NTP_SERVER }}
   ContrailVrouterPhysicalInterface: {{ CONTRAIL_PHY_INTERFACE }}
+  VrouterPhysicalInterface: {{ CONTRAIL_PHY_INTERFACE }}
   ContrailVrouterGateway: {{ CONTRAIL_VROUTER_GW }}
+  VrouterGateway: {{ CONTRAIL_VROUTER_GW }}
   ContrailVrouterNetmask: {{ CONTRAIL_VROUTER_NETMASK }}
+  VrouterNetmask: {{ CONTRAIL_VROUTER_NETMASK }}
   ControlVirtualInterface: {{ CONTROLPLANE_INTERFACE }}
   PublicVirtualInterface: {{ EXTERNAL_INTERFACE }}
 {% if VROUTER_PARENT_VLAN_INTERFACE %}
   ContrailVlanParentInterface: {{ VROUTER_PARENT_VLAN_INTERFACE }}
+  VlanParentInterface: {{ VROUTER_PARENT_VLAN_INTERFACE }}
 {% endif %}
 {% if VROUTER_BOND_INTERFACE %}
   ContrailBondInterface: bond0
+  BondInterface: bond0
 {% endif %}
 {% if VROUTER_BOND_MEMBERS %}
   ContrailBondInterfaceMembers: 'VROUTER_BOND_MEMBERS'
+  BondInterfaceMembers: 'VROUTER_BOND_MEMBERS'
 {% endif %}
