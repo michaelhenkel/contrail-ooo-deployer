@@ -20,6 +20,12 @@
     src: contrail-net.yaml.j2
     dest: /home/stack/tripleo-heat-templates/environments/contrail/contrail-net.yaml
 
+- name: create /home/stack/tripleo-heat-templates/network/config/contrail/
+  file:
+    path: /home/stack/tripleo-heat-templates/network/config/contrail/
+    state: directory
+    mode: 0755
+
 - name: create contrail-nic-config.yaml
   template:
     src: contrail-nic-config.yaml.j2
