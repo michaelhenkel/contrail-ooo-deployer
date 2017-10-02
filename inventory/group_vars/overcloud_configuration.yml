@@ -113,6 +113,35 @@ compute_nic_layout:
     Network: StorageMgmt
     VlanParent: nic3
 
+compute_dpdk_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.168.24.1
+    DnsServer: true
+- bond0:
+    Network: None
+    BondingOptions: "mode=802.3ad"
+- vhost0:
+    Network: InternalApi
+    Routes:
+      - default: true
+- nic3:
+    Network: None
+- vlan10:
+    Network: External
+    VlanParent: nic3
+- vlan20:
+    Network: Management
+    VlanParent: nic3
+- vlan30:
+    Network: Storage
+    VlanParent: nic3
+- vlan40:
+    Network: StorageMgmt
+    VlanParent: nic3
+
 static_ips:
   ExternalVip: 10.1.0.10
   InternalApiVip: 10.0.0.10

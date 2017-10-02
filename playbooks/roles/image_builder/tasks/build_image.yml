@@ -36,6 +36,7 @@
     --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
     --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
     --virt-type kvm \
+    --cpu host \
     --import \
     --os-variant rhel7 \
     --graphics vnc \

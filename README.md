@@ -31,7 +31,54 @@ It is required to download it manually to the KVM host hosting the undercloud VM
 ### Contrail package    
 The Contrail install package must be downloadable from a webserver. The tgz format is needed.    
 
+## Usage
+```
+git clone https://github.com/michaelhenkel/contrail-ooo-deployer
+cd contrail-ooo-deployer
+ansible-playbook -i inventory/ playbooks/start.yml
+```
+
 ## Configuration
+### Playbooks
+There are four playbooks:   
+1. image builder    
+2. undercloud configurator
+3. undercloud deployer
+4. undercloud configurator
+```
+cat playbooks/start.yml
+---
+- hosts:
+  - localhost
+  roles:
+  - image_builder
+
+- hosts:
+  - undercloud
+  roles:
+  - undercloud_installer
+
+- hosts:
+  - undercloud
+  user: stack
+  roles:
+  - undercloud_deployer
+  vars_files:
+  - ../inventory/group_vars/ironic_nodes.yml
+
+- hosts:
+  - undercloud
+  user: stack
+  roles:
+  - overcloud_configurator
+  vars_files:
+  - ../inventory/group_vars/overcloud_configuration.yml
+```
+The playbooks can be used independently. However, the undercloud installer    
+dynamically adds the undercloud host to the inventory. In case the    
+undercloud deployer or overcloud configurator will be used independently    
+the undercloud host has to be added to the host inventory into the undercloud   
+group.    
 ### General configuration    
 General parameters are defined in 
 ```

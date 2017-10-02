@@ -94,13 +94,8 @@ resources:
           params:
             $network_config:
               network_config:
-{% for nic in compute_nic_layout %}
-{% if 'vlan' in nic.keys()[0] %}
-{% set vlan_id = nic.keys()[0].split('vlan') %}
-              - type: vlan
-                device: {{ nic.values()[0].VlanParent }}
-                vlan_id: {{ vlan_id[1] }}
-{% elif 'bond' in nic.keys()[0] %}
+{% for nic in controller_nic_layout %}
+{% if 'bond' in nic.keys()[0] %}
               - type: linux_bond
                 name: {{ nic.keys()[0] }}
                 use_dhcp: false
@@ -109,9 +104,14 @@ resources:
                 members:
 {% for member in nic.values()[0].Members %}
                 - type: interface
-                  name: {{ member }}
+                  name: nic.values()[0].Members[0].member
 {% endfor %}
 {% endif %}
+{% elif 'vlan' in nic.keys()[0] %}
+{% set vlan_id = nic.keys()[0].split('vlan') %}
+              - type: vlan sdkfghjsd
+                device: {{ nic.values()[0].VlanParent }}
+                vlan_id: {{ vlan_id[1] }}
 {% else %}
               - type: interface
                 name: {{ nic.keys()[0] }}
@@ -165,24 +165,12 @@ resources:
       config:
         os_net_config:
           network_config:
-{% for nic in compute_nic_layout %}
+{% for nic in controller_nic_layout %}
 {% if 'vlan' in nic.keys()[0] %}
 {% set vlan_id = nic.keys()[0].split('vlan') %}
               - type: vlan
                 device: {{ nic.values()[0].VlanParent }}
                 vlan_id: {{ vlan_id[1] }}
-{% elif 'bond' in nic.keys()[0] %}
-              - type: linux_bond
-                name: {{ nic.keys()[0] }}
-                use_dhcp: false
-                bonding_options: {{ nic.values()[0].BondingOptions }}
-{% if 'Members' in nic.values()[0] %}
-                members:
-{% for member in nic.values()[0].Members %}
-                - type: interface
-                  name: {{ member }}
-{% endfor %}
-{% endif %}
 {% else %}
               - type: interface
                 name: {{ nic.keys()[0] }}

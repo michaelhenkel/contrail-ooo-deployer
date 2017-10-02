@@ -100,6 +100,18 @@ resources:
               - type: vlan
                 device: {{ nic.values()[0].VlanParent }}
                 vlan_id: {{ vlan_id[1] }}
+{% elif 'bond' in nic.keys()[0] %}
+              - type: linux_bond
+                name: {{ nic.keys()[0] }}
+                use_dhcp: false
+                bonding_options: {{ nic.values()[0].BondingOptions }}
+{% if 'Members' in nic.values()[0] %}
+                members:
+{% for member in nic.values()[0].Members %}
+                - type: interface
+                  name: {{ member }}
+{% endfor %}
+{% endif %}
 {% else %}
               - type: interface
                 name: {{ nic.keys()[0] }}
@@ -159,6 +171,18 @@ resources:
               - type: vlan
                 device: {{ nic.values()[0].VlanParent }}
                 vlan_id: {{ vlan_id[1] }}
+{% elif 'bond' in nic.keys()[0] %}
+              - type: linux_bond
+                name: {{ nic.keys()[0] }}
+                use_dhcp: false
+                bonding_options: {{ nic.values()[0].BondingOptions }}
+{% if 'Members' in nic.values()[0] %}
+                members:
+{% for member in nic.values()[0].Members %}
+                - type: interface
+                  name: {{ member }}
+{% endfor %}
+{% endif %}
 {% else %}
               - type: interface
                 name: {{ nic.keys()[0] }}
