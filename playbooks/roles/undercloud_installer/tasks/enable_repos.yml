@@ -1,7 +1,19 @@
 ---
+- name: auto attach
+  command: subscription-manager attach --auto
+  when: RH_AUTO_ATTACH == 'yes'
+
+- name: debugger
+  debug:
+    msg: "{{ RH_AUTO_ATTACH }}"
+
+- name: pool attach
+  command: subscription-manager attach --pool={{ RH_POOL_ID }}
+  when: RH_AUTO_ATTACH != 'yes' and RH_POOL_ID
+
 - name: enable ocata repos
   command: subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-rh-common-rpms --enable rhel-ha-for-rhel-7-server-rpms --enable rhel-7-server-openstack-11-rpms --enable rhel-7-server-openstack-11-devtools-rpms
-  when: OPENSTACK_VERSION=='ocata'
+  when: OPENSTACK_VERSION =='ocata'
 
 - name: enable newton repos
   command: subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-rh-common-rpms --enable rhel-ha-for-rhel-7-server-rpms --enable rhel-7-server-openstack-10-rpms --enable rhel-7-server-openstack-10-devtools-rpms

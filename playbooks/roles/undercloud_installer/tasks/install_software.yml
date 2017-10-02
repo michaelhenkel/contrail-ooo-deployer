@@ -26,6 +26,12 @@
     sleep: 10
   delegate_to: localhost
 
+- name: install libguestfs-tools
+  yum:
+    name: libguestfs-tools
+    state: latest
+  when: BUILD_DPDK_IMAGE == 'yes'
+
 - name: install tripleo client
   yum:
     name: python-tripleoclient
@@ -58,7 +64,7 @@
   yum_repository:
     name: contrail
     description: contrail rep
-    baseurl: http://localhost/contrail
+    baseurl: http://{{ ansible_ssh_host }}/contrail
     gpgcheck: no
 
 - name: install contrail tripleo heat templates
