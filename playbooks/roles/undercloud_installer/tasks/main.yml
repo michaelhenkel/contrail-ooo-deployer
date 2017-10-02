@@ -1,7 +1,11 @@
 ---
 - name: register undercloud with satelitte
   include: register_with_sat.yml
-  when: SATELLITE_FQDN and SATELLITE_IP
+  when: RH_REG_METHOD == 'satellite'
+
+- name: register undercloud with portal
+  include: register_with_portal.yml
+  when: RH_REG_METHOD == 'portal'
 
 - name: enable repositories
   include: enable_repos.yml

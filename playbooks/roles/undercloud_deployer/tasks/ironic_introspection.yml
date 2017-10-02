@@ -49,6 +49,54 @@
     source /home/stack/stackrc &&
     /bin/openstack overcloud image upload --image-path /home/stack/images/
 
+- name: copy overcloud-full to overcloud-full-dpdk
+  copy:
+    src: /home/stack/images/images/overcloud-full.qcow2
+    dest: /home/stack/images/images/overcloud-full-dpdk.qcow2
+    owner: "stack"
+    remote_src: yes
+  when: BUILD_DPDK_IMAGE == 'yes'
+
+- name: virt cusomize dpdk image
+  shell: |
+    /usr/bin/virt-customize  -a /home/stack/images/images/overcloud-full-dpdk.qcow2 \
+    --sm-credentials {{ RH_PORTAL_USER }}:password:{{ RH_PORTAL_PASSWORD }} --sm-register --sm-attach auto \
+    --run-command 'subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-10-rpms --enable=rhel-7-server-openstack-10-devtools-rpms' \
+    --copy-in /etc/yum.repos.d/contrail.repo:/etc/yum.repos.d \
+    --run-command 'yum install -y contrail-vrouter-utils contrail-vrouter-dpdk contrail-vrouter-dpdk-init' \
+    --run-command 'rm -rf /etc/yum.repos.d/contrail.repo' \
+    --run-command 'subscription-manager unregister' \
+    --selinux-relabel
+  environment:
+    LIBGUESTFS_BACKEND: direct
+  when: BUILD_DPDK_IMAGE == 'yes' and OPENSTACK_VERSION == 'newton'
+
+- name: virt cusomize dpdk image
+  shell: |
+    /usr/bin/virt-customize  -a /home/stack/images/images/overcloud-full-dpdk.qcow2 \
+    --sm-credentials {{ RH_PORTAL_USER }}:password:{{ RH_PORTAL_PASSWORD }} --sm-register --sm-attach auto \
+    --run-command 'subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-11-rpms --enable=rhel-7-server-openstack-11-devtools-rpms' \
+    --copy-in /tmp/dpdk/contrail.repo:/etc/yum.repos.d \
+    --run-command 'yum install -y contrail-vrouter-utils contrail-vrouter-dpdk contrail-vrouter-dpdk-init' \
+    --run-command 'rm -rf /etc/yum.repos.d/contrail.repo' \
+    --run-command 'subscription-manager unregister' \
+    --selinux-relabel
+  environment:
+    LIBGUESTFS_BACKEND: direct
+  when: BUILD_DPDK_IMAGE == 'yes' and OPENSTACK_VERSION == 'ocata'
+
+- name: upload overcloud dpdk image to glance
+  shell: |
+    source /home/stack/stackrc &&
+    openstack image create --container-format bare --disk-format qcow2 --file /home/stack/images/overcloud-full-dpdk.qcow2
+  when: BUILD_DPDK_IMAGE == 'yes'
+
+- name: set dpdk image properties
+  shell: |
+    source /home/stack/stackrc &&
+    openstack image set overcloud-full-dpdk --property kernel_id=`openstack image show bm-deploy-kernel -c id -f value` --property ramdisk_id=`openstack image show bm-deploy-ramdisk -c id -f value`
+  when: BUILD_DPDK_IMAGE == 'yes'
+
 - name: get ironic uuid list
   shell: |
     source /home/stack/stackrc &&
