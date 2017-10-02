@@ -49,7 +49,6 @@
     source /home/stack/stackrc &&
     /bin/openstack overcloud image upload --image-path /home/stack/images/
 
-<<<<<<< HEAD
 - name: copy overcloud-full to overcloud-full-dpdk
   copy:
     src: /home/stack/images/images/overcloud-full.qcow2
@@ -98,8 +97,6 @@
     openstack image set overcloud-full-dpdk --property kernel_id=`openstack image show bm-deploy-kernel -c id -f value` --property ramdisk_id=`openstack image show bm-deploy-ramdisk -c id -f value`
   when: BUILD_DPDK_IMAGE == 'yes'
 
-=======
->>>>>>> 693307c1bce2732d4ec88236af776207a381b3be
 - name: get ironic uuid list
   shell: |
     source /home/stack/stackrc &&
