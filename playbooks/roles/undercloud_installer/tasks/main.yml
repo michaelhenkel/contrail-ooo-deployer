@@ -5,7 +5,7 @@
 
 - name: register undercloud with portal
   include: register_with_portal.yml
-  when: RH_REG_METHOD == 'portal'
+  when: RH_REG_METHOD == 'portal' and RH_REG_METHOD != 'satellite'
 
 - name: enable repositories
   include: enable_repos.yml
