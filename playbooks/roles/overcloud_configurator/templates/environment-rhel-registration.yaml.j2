@@ -4,7 +4,7 @@ parameter_defaults:
 {% else %}
   rhel_reg_activation_key: ""
 {% endif %}
-{% if RH_AUTO_ATTACH == 'yes' %}
+{% if RH_AUTO_ATTACH == 'yes' and not SATELLITE_KEY %}
   rhel_reg_auto_attach: "true"
 {% else %}
   rhel_reg_auto_attach: ""

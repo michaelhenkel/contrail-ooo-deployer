@@ -3,6 +3,7 @@
   copy:
     src: /usr/share/instack-undercloud/undercloud.conf.sample
     dest: /home/stack/undercloud.conf
+    remote_src: yes
 
 - name: set undercloud local ip
   lineinfile:
