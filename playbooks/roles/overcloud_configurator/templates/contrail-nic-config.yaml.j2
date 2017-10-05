@@ -124,14 +124,14 @@ resources:
 {% if 'Routes' in nic.values()[0] %}
                 routes:
 {% for routes in nic.values()[0].Routes %}
-{% if 'ip_netmask' in nic.values()[0].Routes[0] %}
-                - ip_netmask: {{ nic.values()[0].Routes[0].ip_netmask }}
+{% if 'ip_netmask' in routes %}
+                - ip_netmask: {{ routes.ip_netmask }}
                   next_hop:
-                    {{ nic.values()[0].Routes[0].next_hop }}
+                    {{ routes.next_hop }}
 {% endif %}
-{% if 'default' in nic.values()[0].Routes[0] %}
+{% if 'default' in routes %}
                 - default: true
-                  next_hop: 
+                  next_hop:
                     get_param: {{ nic.values()[0].Network }}DefaultRoute
 {% endif %}
 {% endfor %}
@@ -195,12 +195,12 @@ resources:
 {% if 'Routes' in nic.values()[0] %}
                 routes:
 {% for routes in nic.values()[0].Routes %}
-{% if 'ip_netmask' in nic.values()[0].Routes[0] %}
-                - ip_netmask: {{ nic.values()[0].Routes[0].ip_netmask }}
+{% if 'ip_netmask' in routes %}
+                - ip_netmask: {{ routes.ip_netmask }}
                   next_hop:
-                    {{ nic.values()[0].Routes[0].next_hop }}
+                    {{ routes.next_hop }}
 {% endif %}
-{% if 'default' in nic.values()[0].Routes[0] %}
+{% if 'default' in routes %}
                 - default: true
                   next_hop:
                     get_param: {{ nic.values()[0].Network }}DefaultRoute
