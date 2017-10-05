@@ -1,0 +1,16 @@
+DEVICE=eth3
+ONBOOT=yes
+HOTPLUG=no
+NM_CONTROLLED=no
+PEERDNS=no
+BOOTPROTO=none
+{% for key, value in contrail_networks.items() %}
+{% if 'External' in key %}
+{% if not 'VlanId' in value %}
+{% set cidr = UNDERCLOUD_EXTERNAL_API_IP + '/' + value.PrefixLength %}
+{% set ipv4_host =  cidr | unique | ipv4('host/prefix') | first %}
+IPADDR={{ ipv4_host | ipaddr('address') }}
+NETMASK={{ ipv4_host | ipaddr('netmask') }}
+{% endif %}
+{% endif %}
+{% endfor %}

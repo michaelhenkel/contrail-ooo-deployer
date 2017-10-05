@@ -1,0 +1,12 @@
+DEVICE=vlan{{ contrail_networks.External.VlanId|string }}
+ONBOOT=yes
+HOTPLUG=no
+NM_CONTROLLED=no
+PEERDNS=no
+BOOTPROTO=static
+PHYSDEV=eth3
+VLAN=yes
+{% set cidr = UNDERCLOUD_EXTERNAL_API_IP + '/' + contrail_networks.External.PrefixLength|string %}
+{% set ipv4_host =  cidr | ipv4('host/prefix') %}
+IPADDR={{ ipv4_host | ipaddr('address') }}
+NETMASK={{ ipv4_host | ipaddr('netmask') }}

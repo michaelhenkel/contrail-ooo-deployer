@@ -1,29 +1,30 @@
 resource_registry:
-{% for network in contrail_networks %}
-{% if network.keys()[0] == 'External' %}
+{% if 'External' in contrail_networks %}
   OS::TripleO::Network::External: ../network/external.yaml
   OS::TripleO::Network::Ports::ExternalVipPort: ../network/ports/external.yaml
   OS::TripleO::Network::Ports::RedisVipPort: ../network/ports/vip.yaml
 {% endif %}
-{% if network.keys()[0] == 'InternalApi' %}
+{% if 'InternalApi' in contrail_networks %}
   OS::TripleO::Network::InternalApi: ../network/internal_api.yaml
   OS::TripleO::Network::Ports::InternalApiVipPort: ../network/ports/internal_api.yaml
 {% endif %}
-{% if network.keys()[0] == 'StorageMgmt' %}
+{% if 'StorageMgmt' in contrail_networks %}
   OS::TripleO::Network::StorageMgmt: ../network/storage_mgmt.yaml
   OS::TripleO::Network::Ports::StorageMgmtVipPort: ../network/ports/storage_mgmt.yaml
 {% endif %}
-{% if network.keys()[0] == 'Storage' %}
+{% if 'Storage' in contrail_networks %}
   OS::TripleO::Network::Storage: ../network/storage.yaml
   OS::TripleO::Network::Ports::StorageVipPort: ../network/ports/storage.yaml
 {% endif %}
-{% if network.keys()[0] == 'Tenant' %}
+{% if 'Tenant' in contrail_networks %}
   OS::TripleO::Network::Tenant: ../network/tenant.yaml
 {% endif %}
-{% if network.keys()[0] == 'Management' %}
-{% endif %}
+{% if 'Management' in contrail_networks %}
   OS::TripleO::Network::Management: ../network/management.yaml
-{% endfor %}
+{% endif %}
+{% if 'Contrail' in contrail_networks %}
+  OS::TripleO::Network::Contrail: ../network/contrail.yaml
+{% endif %}
 
 
 {% for nic in controller_nic_layout %}

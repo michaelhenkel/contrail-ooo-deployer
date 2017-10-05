@@ -55,9 +55,9 @@ parameter_defaults:
 {% if RH_REG_METHOD == 'satellite' %}
   rhel_reg_method: "satellite"
   rhel_reg_sat_repo: "rhel-7-server-satellite-tools-{{ SATELLITE_VERSION }}-rpms"
-{% else %}
-  rhel_reg_method: ""
-  rhel_reg_sat_repo: ""
+{% elif RH_REG_METHOD == 'portal' %}
+  rhel_reg_method: "portal"
+  rhel_reg_sat_repo: "rhel-7-server-satellite-tools-6.2-rpms"
 {% endif %}
   rhel_reg_http_proxy_host: ""
   rhel_reg_http_proxy_port: ""

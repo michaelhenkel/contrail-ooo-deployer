@@ -43,7 +43,7 @@
     --serial pty \
     --noautoconsole \
     --console pty,target_type=virtio
-  when: UNDERCLOUD_EXTERNAL_API_IP is undefined
+  when: UNDERCLOUD_EXTERNAL_API_IP is not define
 
 - name: Install undercloud with external api nw
   command: |
@@ -54,7 +54,6 @@
     --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
     --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
     --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_MGMT_NW }},model=virtio \
     --virt-type kvm \
     --cpu host \
     --import \
@@ -63,4 +62,4 @@
     --serial pty \
     --noautoconsole \
     --console pty,target_type=virtio
-  when: UNDERCLOUD_EXTERNAL_API_IP is defined
+  when: UNDERCLOUD_EXTERNAL_API_IP is not define

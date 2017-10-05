@@ -20,39 +20,39 @@ VROUTER_PARENT_VLAN_INTERFACE:
 VROUTER_BOND_INTERFACE:
 VROUTER_BOND_MEMBERS:
 contrail_networks:
-- ControlPlane:
+  ControlPlane:
     PrefixLength: 24
     Prefix: 192.168.24.0
     Gateway: 192.168.24.1
-- InternalApi:
+  InternalApi:
     PrefixLength: 24
     Prefix: 10.0.0.0
     Gateway: 10.0.0.1
     VlanId: 1
     AllocationStart: 10.0.0.11
     AllocationEnd: 10.0.0.200
-- External:
+  External:
     PrefixLength: 24
     Prefix: 10.1.0.0
     VlanId: 10
     Gateway: 10.1.0.1
     AllocationStart: 10.1.0.11
     AllocationEnd: 10.1.0.200
-- Management:
+  Management:
     PrefixLength: 24
     Prefix: 10.2.0.0
     Gateway: 10.2.0.1
     VlanId: 20
     AllocationStart: 10.2.0.11
     AllocationEnd: 10.2.0.200
-- Storage:
+  Storage:
     PrefixLength: 24
     Prefix: 10.3.0.0
     VlanId: 30
     Gateway: 10.3.0.1
     AllocationStart: 10.3.0.11
     AllocationEnd: 10.3.0.200
-- StorageMgmt:
+  StorageMgmt:
     PrefixLength: 24
     Prefix: 10.4.0.0
     Gateway: 10.4.0.1
