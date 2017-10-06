@@ -38,6 +38,7 @@ parameter_defaults:
     ContrailVrouterNetwork: internal_api
     ContrailDpdkNetwork: internal_api
 {% set contrail_version = CONTRAIL_VERSION.split('.') %}
+  ContrailDpdkImage: overcloud-full-dpdk
   ContrailVersion: {{ contrail_version[0] }}
   ContrailRepo: {{ CONTRAIL_REPO }}
   ContrailControlManageNamed: true

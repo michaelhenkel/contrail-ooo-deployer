@@ -11,14 +11,14 @@ CONTRAIL_REPO: http://192.168.24.1/contrail
 EC2METADATAIP: 192.168.24.1
 DNS_SERVERS: 10.87.64.101
 NTP_SERVER: 10.0.0.1
-CONTRAIL_PHY_INTERFACE: ens7
+CONTRAIL_PHY_INTERFACE: vlan100
 CONTRAIL_VROUTER_GW: 10.0.0.1
 CONTRAIL_VROUTER_NETMASK: 255.255.255.0
 CONTROLPLANE_INTERFACE: eth0
 EXTERNAL_INTERFACE: vlan10
-VROUTER_PARENT_VLAN_INTERFACE:
-VROUTER_BOND_INTERFACE: 
-VROUTER_BOND_MEMBERS: 
+VROUTER_PARENT_VLAN_INTERFACE: bond0
+VROUTER_BOND_INTERFACE: bond0
+VROUTER_BOND_MEMBERS: eth1
 BOND_MODE:
 BOND_POLICY:
 DPDK_HUGEPAGES:
@@ -33,6 +33,7 @@ contrail_networks:
     PrefixLength: 24
     Prefix: 10.0.0.0
     Gateway: 10.0.0.1
+    VlanId: 100
     AllocationStart: 10.0.0.11
     AllocationEnd: 10.0.0.200
   External:
@@ -71,7 +72,10 @@ controller_nic_layout:
         next_hop: 192.168.24.1
     DnsServer: true
 - nic2:
+    Network: None
+- vlan100:
     Network: InternalApi
+    VlanParent: nic2
     Routes:
       - default: true
 - nic3:
@@ -98,6 +102,13 @@ compute_nic_layout:
     DnsServer: true
 - nic2:
     Network: None
+- bond0:
+    Network: None
+    BondingOptions: "mode=802.3ad"
+    Members:
+    - nic2
+- vlan100:
+    VlanParent: bond0
 - vhost0:
     Network: InternalApi
     Routes:
@@ -124,6 +135,11 @@ compute_dpdk_nic_layout:
       - ip_netmask: 169.254.169.254/32
         next_hop: 192.168.24.1
     DnsServer: true
+- bond0:
+    Network: None
+    BondingOptions: "mode=802.3ad"
+- vlan100:
+    VlanParent: bond0
 - vhost0:
     Network: InternalApi
     Routes:

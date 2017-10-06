@@ -165,7 +165,7 @@ resources:
       config:
         os_net_config:
           network_config:
-{% for nic in compute_nic_layout %}
+{% for nic in compute_dpdk_nic_layout %}
 {% if 'vlan' in nic.keys()[0] %}
 {% set vlan_id = nic.keys()[0].split('vlan') %}
               - type: vlan
