@@ -5,7 +5,7 @@ CONTRAIL_ANALYTICS_COUNT: 3
 CONTRAIL_ANALYTICS_DB_COUNT: 3
 CONTRAIL_TSN_COUNT: 0
 COMPUTE_COUNT: 3
-COMPUTE_DPDK_COUNT: 1
+COMPUTE_DPDK_COUNT: 0
 QEMU: true
 CONTRAIL_REPO: http://192.168.24.1/contrail
 EC2METADATAIP: 192.168.24.1
@@ -96,29 +96,29 @@ compute_nic_layout:
       - ip_netmask: 169.254.169.254/32
         next_hop: 192.168.24.1
     DnsServer: true
-- nic2:
+- ens7:
     Network: None
 - vhost0:
     Network: InternalApi
     Routes:
       - default: true
-- nic3:
+- eth1:
     Network: None
 - vlan10:
     Network: External
-    VlanParent: nic3
+    VlanParent: eth1
 - vlan20:
     Network: Management
-    VlanParent: nic3
+    VlanParent: eth1
 - vlan30:
     Network: Storage
-    VlanParent: nic3
+    VlanParent: eth1
 - vlan40:
     Network: StorageMgmt
-    VlanParent: nic3
+    VlanParent: eth1
 
 compute_dpdk_nic_layout:
-- nic1:
+- eth0:
     Network: ControlPlane
     Routes:
       - ip_netmask: 169.254.169.254/32
@@ -128,20 +128,20 @@ compute_dpdk_nic_layout:
     Network: InternalApi
     Routes:
       - default: true
-- nic3:
+- eth1:
     Network: None
 - vlan10:
     Network: External
-    VlanParent: nic3
+    VlanParent: eth1
 - vlan20:
     Network: Management
-    VlanParent: nic3
+    VlanParent: eth1
 - vlan30:
     Network: Storage
-    VlanParent: nic3
+    VlanParent: eth1
 - vlan40:
     Network: StorageMgmt
-    VlanParent: nic3
+    VlanParent: eth1
 
 static_ips:
   ExternalVip: 10.1.0.10
