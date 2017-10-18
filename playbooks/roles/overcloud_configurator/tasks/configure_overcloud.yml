@@ -69,33 +69,17 @@
     src: ips-from-pool-all.yaml.j2
     dest: /home/stack/tripleo-heat-templates/environments/ips-from-pool-all.yaml
 
-- set_fact:
-    qemu_options: "{% if QEMU == true %} '--libvirt-type qemu' {% else %} '' {% endif %}"
-
-- set_fact:
-    storage_options: "{% if CEPH_SUPPORT == true %} '-e /home/stack/tripleo-heat-templates/environments/contrail/storage-environment.yaml' {% else %} '' {% endif %}"
-
 - name: Check if stack already exist
-  shell: openstack stack show {{ stack_name }}
+  shell: openstack stack show {{ STACK_NAME }}
   register: stack_exist
   ignore_errors: yes
 
-- set_fact:
-    stack_arguments: >
-        --templates tripleo-heat-templates/
-        --roles-file tripleo-heat-templates/environments/contrail/roles_data.yaml
-        -e tripleo-heat-templates/environments/puppet-pacemaker.yaml
-        -e tripleo-heat-templates/environments/contrail/contrail-services.yaml
-        -e tripleo-heat-templates/environments/network-isolation.yaml
-        -e tripleo-heat-templates/environments/contrail/contrail-net.yaml
-        -e tripleo-heat-templates/environments/ips-from-pool-all.yaml
-        -e tripleo-heat-templates/environments/network-management.yaml
-        -e tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/environment-rhel-registration.yaml
-        -e tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
-        {{ qemu_options }}
-        {{ storage_options }}
+- name: create create-stack.sh
+  template:
+    src: create-stack.sh.j2
+    dest: /home/stack/create-stack.sh
+    mode: 0755
 
-- name: Deploy openstack
-  shell: openstack overcloud deploy --stack {{ stack_name }} {{ stack_arguments }}
+- name: DEPLOY OVERCLOUD - Run create-stack.sh if stack hasn't already been created
+  command: "sh /home/stack/create-stack.sh"
   when: stack_exist|failed
-

@@ -14,34 +14,34 @@ parameter_defaults:
   #### BACKEND SELECTION ####
 
   ## Whether to enable iscsi backend for Cinder.
-  CinderEnableIscsiBackend: {{ CinderEnableIscsiBackend }}
+  CinderEnableIscsiBackend: {{ CINDER_ENABLE_ISCSI_BACKEND }}
   ## Whether to enable rbd (Ceph) backend for Cinder.
-  CinderEnableRbdBackend: {{ CinderEnableRbdBackend }}
+  CinderEnableRbdBackend: {{ CINDER_ENABLE_RBD_BACKEND }}
   ## Cinder Backup backend can be either 'ceph' or 'swift'.
-  CinderBackupBackend: {{ CinderBackupBackend }}
+  CinderBackupBackend: {{ CINDER_BACKUP_BACKEND }}
   ## Whether to enable NFS backend for Cinder.
   # CinderEnableNfsBackend: false
   ## Whether to enable rbd (Ceph) backend for Nova ephemeral storage.
-  NovaEnableRbdBackend: {{ NovaEnableRbdBackend }}
+  NovaEnableRbdBackend: {{ NOVA_ENABLE_RBD_BACKEND }}
   ## Glance backend can be either 'rbd' (Ceph), 'swift' or 'file'.
-  GlanceBackend: {{ GlanceBackend }}
+  GlanceBackend: {{ GLANCE_BACKEND }}
   ## Gnocchi backend can be either 'rbd' (Ceph), 'swift' or 'file'.
-  GnocchiBackend: {{ GnocchiBackend }}
+  GnocchiBackend: {{ GNOCCHI_BACKEND }}
 
-  ceph_disks: "{{ ceph_disks|join(' ') }}"
+  ceph_disks: "{{ CEPH_DISKS|join(' ') }}"
   ExtraConfig:
     ceph::profile::params::osds:
     {% for disk in ceph_disks %}
          '{{ disk }}': {}
     {% endfor %}
 
-    ceph::osd_crush_update_on_start: {{ osd_crush_update_on_start }}
-    ceph::profile::params::osd_journal_size: {{ osd_journal_size }}
+    ceph::osd_crush_update_on_start: {{ OSD_CRUSH_UPDATE_ON_START }}
+    ceph::profile::params::osd_journal_size: {{ OSD_JOURNAL_SIZE }}
 
     CephPools:
-    {% for pool in ceph_pools %}
+    {% for pool in CEPH_POOLS %}
   {{ pool }}:
-        size: {{ replica_size }}
-        pg_num: {{ final_pgp_num }}
-        pgp_num: {{ final_pgp_num }}
+        size: {{ REPLICA_SIZE }}
+        pg_num: {{ FINAL_PGP_NUM }}
+        pgp_num: {{ FINAL_PGP_NUM }}
     {% endfor %}

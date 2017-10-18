@@ -1,20 +1,21 @@
 ### Storage Environment configuration
 CEPH_SUPPORT: false
-CinderEnableIscsiBackend: "false"
-CinderEnableRbdBackend: "false"
-CinderBackupBackend: "ceph"
-NovaEnableRbdBackend: "true"
-GlanceBackend: "rbd"
-GnocchiBackend: "rbd"
-ceph_disks: ['/dev/sdb','/dev/sdc','/dev/sdd','/dev/sde','/dev/sdf']
-osd_crush_update_on_start: "true"
-osd_journal_size: "2048"
-ceph_pools: ['vms','rdb','images','volumes','backups']
-replica_size: "2"
+CINDER_ENABLE_ISCSI_BACKEND: "false"
+CINDER_ENABLE_RBD_BACKEND: "false"
+CINDER_BACKUP_BACKEND: "ceph"
+NOVA_ENABLE_RBD_BACKEND: "true"
+GLANCE_BACKEND: "rbd"
+GNOCCHI_BACKEND: "rbd"
 
-osd_num: "{{ ceph_disks|length}}"
-pools_num: "{{ ceph_pools|length }}"
-total_pgp_num: "{{osd_num|int * 100 / replica_size|int / pools_num|int}}"
-final_pgp_num: "{{ 2 | pow(total_pgp_num | int | log(2) | round |int) }}"
+CEPH_DISKS: ['/dev/sdb','/dev/sdc','/dev/sdd','/dev/sde','/dev/sdf']
+OSD_CRUSH_UPDATE_ON_START: "true"
+OSD_JOURNAL_SIZE: "2048"
+CEPH_POOLS: ['vms','rdb','images','volumes','backups']
+REPLICA_SIZE: "2"
 
-stack_name: "overcloud"
+OSD_NUM: "{{ CEPH_DISKS|length}}"
+POOLS_NUM: "{{ CEPH_POOLS|length }}"
+TOTAL_PGP_NUM: "{{OSD_NUM|int * 100 / REPLICA_SIZE|int / POOLS_NUM|int}}"
+FINAL_PGP_NUM: "{{ 2 | pow(TOTAL_PGP_NUM | int | log(2) | round |int) }}"
+
+STACK_NAME: "overcloud"
