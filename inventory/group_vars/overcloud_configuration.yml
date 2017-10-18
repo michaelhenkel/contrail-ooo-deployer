@@ -24,6 +24,9 @@ BOND_POLICY:
 DPDK_HUGEPAGES:
 DPDK_COREMASK:
 DPDK_DRIVER:
+
+CEPH_SUPPORT: false
+
 contrail_networks:
   ControlPlane:
     PrefixLength: 24

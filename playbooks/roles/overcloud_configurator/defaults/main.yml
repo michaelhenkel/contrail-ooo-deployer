@@ -1,0 +1,20 @@
+### Storage Environment configuration
+CEPH_SUPPORT: false
+CinderEnableIscsiBackend: "false"
+CinderEnableRbdBackend: "false"
+CinderBackupBackend: "ceph"
+NovaEnableRbdBackend: "true"
+GlanceBackend: "rbd"
+GnocchiBackend: "rbd"
+ceph_disks: ['/dev/sdb','/dev/sdc','/dev/sdd','/dev/sde','/dev/sdf']
+osd_crush_update_on_start: "true"
+osd_journal_size: "2048"
+ceph_pools: ['vms','rdb','images','volumes','backups']
+replica_size: "2"
+
+osd_num: "{{ ceph_disks|length}}"
+pools_num: "{{ ceph_pools|length }}"
+total_pgp_num: "{{osd_num|int * 100 / replica_size|int / pools_num|int}}"
+final_pgp_num: "{{ 2 | pow(total_pgp_num | int | log(2) | round |int) }}"
+
+stack_name: "overcloud"

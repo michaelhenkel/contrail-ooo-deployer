@@ -13,3 +13,6 @@ openstack overcloud deploy --templates tripleo-heat-templates/ \
 {% else %}
   -e tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
 {% endif %}
+{% if CEPH_SUPPORT == true %}
+  -e /home/stack/tripleo-heat-templates/environments/contrail/storage-environment.yaml
+{% endif %}
