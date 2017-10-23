@@ -1,0 +1,163 @@
+---
+RH_REG_METHOD: portal
+RH_PORTAL_USER: <RH USER>
+RH_PORTAL_PASSWORD: <RH PWD>
+RH_AUTO_ATTACH:
+SATELLITE_FQDN:
+SATELLITE_IP:
+SATELLITE_KEY:
+SATELLITE_ORG:
+SATELLITE_VERSION:
+RH_POOL_ID: <POOL ID>
+OPENSTACK_VERSION: newton
+
+UNDERCLOUD_EXTERNAL_API_IP:
+BUILD_DPDK_IMAGE: 'no'
+
+OPENSTACK_CONTROLLER_COUNT: 1
+CONTRAIL_CONTROLLER_COUNT: 1
+CONTRAIL_ANALYTICS_COUNT: 1
+CONTRAIL_ANALYTICS_DB_COUNT: 1
+CONTRAIL_TSN_COUNT: 0
+COMPUTE_COUNT: 0
+COMPUTE_DPDK_COUNT: 0
+QEMU: false
+CONTRAIL_REPO: http://192.0.2.1/contrail-4.0.1.0-32
+EC2METADATAIP: 169.254.169.254
+DNS_SERVERS: 172.29.131.60
+NTP_SERVER: 66.129.255.62
+CONTRAIL_PHY_INTERFACE: bond0
+CONTRAIL_VROUTER_GW: 172.16.81.254
+CONTRAIL_VROUTER_NETMASK: 255.255.255.0
+CONTROLPLANE_INTERFACE: eth0
+EXTERNAL_INTERFACE: eth1
+VROUTER_PARENT_VLAN_INTERFACE:
+VROUTER_BOND_INTERFACE: bond0
+VROUTER_BOND_MEMBERS: ens7f0,ens7f1
+BOND_MODE:
+BOND_POLICY:
+DPDK_HUGEPAGES:
+DPDK_COREMASK:
+DPDK_DRIVER:
+contrail_networks:
+  ControlPlane:
+    PrefixLength: 24
+    Prefix: 192.0.2.0
+    Gateway: 192.0.2.1
+  InternalApi:
+    PrefixLength: 24
+    Prefix: 172.16.81.0
+    Gateway: 172.16.81.254
+    AllocationStart: 172.16.81.30
+    AllocationEnd: 172.16.81.60
+  External:
+    PrefixLength: 25
+    Prefix: 10.87.1.128
+    Gateway: 10.87.1.254
+    AllocationStart: 10.87.1.201
+    AllocationEnd: 10.87.1.211
+  Management:
+    PrefixLength: 24
+    Prefix: 192.168.1.0
+    Gateway: 192.168.1.1
+    VlanId: 2001
+    AllocationStart: 192.168.1.70
+    AllocationEnd: 192.168.1.100
+  Storage:
+    PrefixLength: 24
+    Prefix: 172.16.1.0
+    VlanId: 2002
+    Gateway: 172.16.1.254
+    AllocationStart: 172.16.1.30
+    AllocationEnd: 172.16.1.70
+  StorageMgmt:
+    PrefixLength: 24
+    Prefix: 172.16.3.0
+    Gateway: 172.16.3.254
+    VlanId: 2003
+    AllocationStart: 172.16.3.30
+    AllocationEnd: 172.16.3.70
+controller_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.0.2.1
+      - default: true
+    DnsServer: true
+- vlan2001:
+    Network: Management
+    VlanParent: nic1
+- vlan2002:
+    Network: Storage
+    VlanParent: nic1
+- vlan2003:
+    Network: StorageMgmt
+    VlanParent: nic1
+- nic2:
+    Network: External
+- nic3:
+    Network: InternalApi
+
+compute_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.0.2.1
+      - default: true
+    DnsServer: true
+- vlan2001:
+    Network: Management
+    VlanParent: nic1
+- vlan2002:
+    Network: Storage
+    VlanParent: nic1
+- vlan2003:
+    Network: StorageMgmt
+    VlanParent: nic1
+- nic2:
+    Network: External
+- nic3:
+    Network: None
+- vhost0:
+    Network: InternalApi
+
+static_ips:
+  ExternalVip: 10.87.1.215
+  InternalApiVip: 172.16.81.60
+  Controller:
+    internal_api:
+    - 172.16.81.30
+    - 172.16.81.31
+    - 172.16.81.32
+  Compute:
+    internal_api:
+    - 172.16.81.55
+    - 172.16.81.56
+    - 172.16.81.57
+  ContrailController:
+    internal_api:
+    - 172.16.81.35
+    - 172.16.81.36
+    - 172.16.81.37
+  ContrailAnalytics:
+    internal_api:
+    - 172.16.81.38
+    - 172.16.81.39
+    - 172.16.81.40
+  ContrailAnalyticsDatabase:
+    internal_api:
+    - 172.16.81.41
+    - 172.16.81.42
+    - 172.16.81.43
+  ContrailTsn:
+    internal_api:
+    - 172.16.81.44
+    - 172.16.81.45
+    - 172.16.81.46
+  ContrailDpdk:
+    internal_api:
+    - 172.16.81.47
+    - 172.16.81.48
+    - 172.16.81.49

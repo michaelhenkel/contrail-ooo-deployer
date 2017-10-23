@@ -1,0 +1,47 @@
+## A Heat environment file which can be used to set up storage
+#params for storage-environment
+## backends. Defaults to Ceph used as a backend for Cinder, Glance and
+
+## Nova ephemeral storage.
+resource_registry:
+  OS::TripleO::Services::CephMon: /home/stack/openstack-tripleo-heat-templates/puppet/services/ceph-mon.yaml
+  OS::TripleO::Services::CephOSD: /home/stack/openstack-tripleo-heat-templates/puppet/services/ceph-osd.yaml
+  OS::TripleO::Services::CephClient: /home/stack/openstack-tripleo-heat-templates/puppet/services/ceph-client.yaml
+  OS::TripleO::NodeUserData: wipe-disks.yaml
+
+parameter_defaults:
+
+  #### BACKEND SELECTION ####
+
+  ## Whether to enable iscsi backend for Cinder.
+  CinderEnableIscsiBackend: {{ CINDER_ENABLE_ISCSI_BACKEND }}
+  ## Whether to enable rbd (Ceph) backend for Cinder.
+  CinderEnableRbdBackend: {{ CINDER_ENABLE_RBD_BACKEND }}
+  ## Cinder Backup backend can be either 'ceph' or 'swift'.
+  CinderBackupBackend: {{ CINDER_BACKUP_BACKEND }}
+  ## Whether to enable NFS backend for Cinder.
+  # CinderEnableNfsBackend: false
+  ## Whether to enable rbd (Ceph) backend for Nova ephemeral storage.
+  NovaEnableRbdBackend: {{ NOVA_ENABLE_RBD_BACKEND }}
+  ## Glance backend can be either 'rbd' (Ceph), 'swift' or 'file'.
+  GlanceBackend: {{ GLANCE_BACKEND }}
+  ## Gnocchi backend can be either 'rbd' (Ceph), 'swift' or 'file'.
+  GnocchiBackend: {{ GNOCCHI_BACKEND }}
+
+  ceph_disks: "{{ CEPH_DISKS|join(' ') }}"
+  ExtraConfig:
+    ceph::profile::params::osds:
+    {% for disk in ceph_disks %}
+         '{{ disk }}': {}
+    {% endfor %}
+
+    ceph::osd_crush_update_on_start: {{ OSD_CRUSH_UPDATE_ON_START }}
+    ceph::profile::params::osd_journal_size: {{ OSD_JOURNAL_SIZE }}
+
+    CephPools:
+    {% for pool in CEPH_POOLS %}
+  {{ pool }}:
+        size: {{ REPLICA_SIZE }}
+        pg_num: {{ FINAL_PGP_NUM }}
+        pgp_num: {{ FINAL_PGP_NUM }}
+    {% endfor %}

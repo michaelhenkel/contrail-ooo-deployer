@@ -1,0 +1,21 @@
+### Storage Environment configuration
+CEPH_SUPPORT: false
+CINDER_ENABLE_ISCSI_BACKEND: "false"
+CINDER_ENABLE_RBD_BACKEND: "false"
+CINDER_BACKUP_BACKEND: "ceph"
+NOVA_ENABLE_RBD_BACKEND: "true"
+GLANCE_BACKEND: "rbd"
+GNOCCHI_BACKEND: "rbd"
+
+CEPH_DISKS: ['/dev/sdb','/dev/sdc','/dev/sdd','/dev/sde','/dev/sdf']
+OSD_CRUSH_UPDATE_ON_START: "true"
+OSD_JOURNAL_SIZE: "2048"
+CEPH_POOLS: ['vms','rdb','images','volumes','backups']
+REPLICA_SIZE: "2"
+
+OSD_NUM: "{{ CEPH_DISKS|length}}"
+POOLS_NUM: "{{ CEPH_POOLS|length }}"
+TOTAL_PGP_NUM: "{{OSD_NUM|int * 100 / REPLICA_SIZE|int / POOLS_NUM|int}}"
+FINAL_PGP_NUM: "{{ 2 | pow(TOTAL_PGP_NUM | int | log(2) | round |int) }}"
+
+STACK_NAME: "overcloud"

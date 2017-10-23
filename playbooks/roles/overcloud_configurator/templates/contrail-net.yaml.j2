@@ -4,8 +4,10 @@ resource_registry:
   OS::TripleO::ContrailAnalytics::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
   OS::TripleO::ContrailAnalyticsDatabase::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
   OS::TripleO::Compute::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
-  OS::TripleO::ContrailDpdk::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute-dpdk.yaml
   OS::TripleO::ContrailTsn::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
+{% if BUILD_DPDK_IMAGE == 'yes' %}
+  OS::TripleO::ContrailDpdk::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute-dpdk.yaml
+{% endif %}
 
 parameter_defaults:
 {% for key, value in contrail_networks.items() %}

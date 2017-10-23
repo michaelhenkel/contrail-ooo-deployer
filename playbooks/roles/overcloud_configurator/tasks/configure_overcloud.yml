@@ -20,6 +20,24 @@
     src: contrail-net.yaml.j2
     dest: /home/stack/tripleo-heat-templates/environments/contrail/contrail-net.yaml
 
+- name: create storage-environment.yaml.j2
+  template:
+    src: storage-environment.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/environments/contrail/storage-environment.yaml
+  when: "CEPH_SUPPORT == true"
+
+- name: Place wipe-disks.yaml
+  template:
+    src: wipe-disks.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/environments/contrail/wipe-disks.yaml
+  when: "CEPH_SUPPORT == true"
+
+- name: Place wipe-disk.sh
+  template:
+    src: wipe-disk.sh.j2
+    dest: /home/stack/tripleo-heat-templates/environments/contrail/wipe-disk.sh
+  when: "CEPH_SUPPORT == true"
+
 - name: create /home/stack/tripleo-heat-templates/network/config/contrail/
   file:
     path: /home/stack/tripleo-heat-templates/network/config/contrail/
@@ -40,6 +58,7 @@
   template:
     src: contrail-nic-config-compute-dpdk.yaml.j2
     dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-nic-config-compute-dpdk.yaml
+  when: "BUILD_DPDK_IMAGE == 'yes'"
 
 - name: create network-isolation.yaml.j2
   template:
@@ -51,8 +70,17 @@
     src: ips-from-pool-all.yaml.j2
     dest: /home/stack/tripleo-heat-templates/environments/ips-from-pool-all.yaml
 
+- name: Check if stack already exist
+  shell: "source /home/stack/stackrc && openstack stack show {{ STACK_NAME }}"
+  register: stack_exist
+  ignore_errors: yes
+
 - name: create create-stack.sh
   template:
     src: create-stack.sh.j2
     dest: /home/stack/create-stack.sh
     mode: 0755
+
+- name: DEPLOY OVERCLOUD - Run create-stack.sh if stack hasn't already been created
+  shell: "source /home/stack/stackrc && sh /home/stack/create-stack.sh"
+  when: stack_exist|failed
