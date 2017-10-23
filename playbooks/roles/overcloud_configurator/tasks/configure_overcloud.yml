@@ -58,6 +58,7 @@
   template:
     src: contrail-nic-config-compute-dpdk.yaml.j2
     dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-nic-config-compute-dpdk.yaml
+  when: "BUILD_DPDK_IMAGE == 'yes'"
 
 - name: create network-isolation.yaml.j2
   template:
@@ -70,7 +71,7 @@
     dest: /home/stack/tripleo-heat-templates/environments/ips-from-pool-all.yaml
 
 - name: Check if stack already exist
-  shell: openstack stack show {{ STACK_NAME }}
+  shell: "source /home/stack/stackrc && openstack stack show {{ STACK_NAME }}"
   register: stack_exist
   ignore_errors: yes
 
@@ -81,5 +82,5 @@
     mode: 0755
 
 - name: DEPLOY OVERCLOUD - Run create-stack.sh if stack hasn't already been created
-  command: "sh /home/stack/create-stack.sh"
+  shell: "source /home/stack/stackrc && sh /home/stack/create-stack.sh"
   when: stack_exist|failed

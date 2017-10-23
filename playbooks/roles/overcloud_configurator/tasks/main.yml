@@ -1,7 +1,7 @@
 ---
 - name: add external_api interface
   include: add_external_api_interface.yml
-  when: UNDERCLOUD_EXTERNAL_API_IP is defined
+  when: UNDERCLOUD_EXTERNAL_API_IP is defined and UNDERCLOUD_EXTERNAL_API_IP
 
 - name: configure overcloud services
   include: configure_overcloud.yml
