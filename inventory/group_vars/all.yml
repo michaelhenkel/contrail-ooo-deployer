@@ -37,3 +37,5 @@ CONTRAIL_VERSION: 4.0.2.0
 CONTRAIL_VERSION_BUILD: 35
 CONTRAIL_PACKAGE_LOCATION: http://10.0.0.2/
 BUILD_DPDK_IMAGE: 'no'
+# Optional parameter
+#UNDERCLOUD_MAC: 52:54:00:16:11:2e  # Used for specific ip from external dhcp server instead of default.
