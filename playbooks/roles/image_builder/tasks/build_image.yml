@@ -43,7 +43,7 @@
     --serial pty \
     --noautoconsole \
     --console pty,target_type=virtio
-  when: UNDERCLOUD_EXTERNAL_API_IP is undefined
+  when: UNDERCLOUD_EXTERNAL_API_IP is undefined and UNDERCLOUD_MAC is undefined
 
 - name: Install undercloud with external api nw
   command: |
@@ -63,4 +63,45 @@
     --serial pty \
     --noautoconsole \
     --console pty,target_type=virtio
-  when: UNDERCLOUD_EXTERNAL_API_IP is defined
+  when: UNDERCLOUD_EXTERNAL_API_IP is defined and UNDERCLOUD_MAC is undefined
+
+- name: Install undercloud with static mac and without external api nw
+  command: |
+    virt-install --name {{ UNDERCLOUD_NAME }} \
+    --disk {{ IMAGE_DIRECTORY }}/{{ UNDERCLOUD_NAME }}.qcow2 \
+    --vcpus={{ UNDERCLOUD_VCPU }} \
+    --ram={{ UNDERCLOUD_RAM }} \
+    --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
+    --mac={{UNDERCLOUD_MAC}} \
+    --virt-type kvm \
+    --cpu host \
+    --import \
+    --os-variant rhel7 \
+    --graphics vnc \
+    --serial pty \
+    --noautoconsole \
+    --console pty,target_type=virtio
+  when: UNDERCLOUD_MAC is defined and UNDERCLOUD_EXTERNAL_API_IP is undefined
+
+- name: Install undercloud with external api nw and static mac
+  command: |
+    virt-install --name {{ UNDERCLOUD_NAME }} \
+    --disk {{ IMAGE_DIRECTORY }}/{{ UNDERCLOUD_NAME }}.qcow2 \
+    --vcpus={{ UNDERCLOUD_VCPU }} \
+    --ram={{ UNDERCLOUD_RAM }} \
+    --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_MGMT_NW }},model=virtio \
+    --mac={{UNDERCLOUD_MAC}} \
+    --virt-type kvm \
+    --cpu host \
+    --import \
+    --os-variant rhel7 \
+    --graphics vnc \
+    --serial pty \
+    --noautoconsole \
+    --console pty,target_type=virtio
+  when: UNDERCLOUD_EXTERNAL_API_IP is defined and UNDERCLOUD_MAC is defined

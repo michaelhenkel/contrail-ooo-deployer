@@ -6,7 +6,18 @@
 - name: Get undercloud dhcp address
   shell: /usr/bin/virsh domifaddr {{ UNDERCLOUD_NAME }} | grep ipv4 | tr  '/' ' ' |awk '{print $4}'
   register: undercloud_ip
+  when: UNDERCLOUD_MAC is undefined and UNDERCLOUD_STATIC_IP is undefined
+
+- name: update undercloud_ip variable
+  set_fact:
+      undercloud_ip: "{{ undercloud_ip.stdout_lines[0] }}"
+  when: UNDERCLOUD_MAC is undefined and UNDERCLOUD_STATIC_IP is undefined
+
+- name: Get Udercloud ip address of static mac assigned from external
+  set_fact:
+     undercloud_ip: "{{ UNDERCLOUD_STATIC_IP }}"
+  when: UNDERCLOUD_MAC is defined and UNDERCLOUD_STATIC_IP is defined
 
 - add_host:
-    name: "{{ undercloud_ip.stdout_lines[0] }}"
+    name: "{{ undercloud_ip }}"
     groups: undercloud
