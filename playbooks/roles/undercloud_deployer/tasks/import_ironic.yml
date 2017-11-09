@@ -32,7 +32,7 @@
     -n {{ item.key }} \
     -p capabilities=profile:{{ item.value.role }} | tail -2|awk '{print $4}'
   register: node_create_result_ipmi
-  when: item.value.ipmi_driver == 'ipmi'
+  when: item.value.ipmi_driver == 'pxe_ipmitool'
 
 - name: node_create_result pxe ssh
   debug: 
