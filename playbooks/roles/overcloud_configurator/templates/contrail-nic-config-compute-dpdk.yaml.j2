@@ -81,7 +81,7 @@ parameters:
     description: The IP address of the EC2 metadata server.
     type: string
 
-{% if OPENSTACK_VERSION == 'ocata' %}}
+{% if OPENSTACK_VERSION == 'ocata' %}
 resources:
   OsNetConfigImpl:
     type: OS::Heat::SoftwareConfig
