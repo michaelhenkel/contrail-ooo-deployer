@@ -31,12 +31,15 @@ parameter_defaults:
     ContrailAnalyticsNetwork: internal_api
     ContrailAnalyticsDatabaseNetwork: internal_api
     ContrailConfigNetwork: internal_api
-    ContrailControlNetwork: internal_api
+    ContrailControlNetwork: {{ CONTRAIL_CTRL_DATA_NW }}
     ContrailDatabaseNetwork: internal_api
     ContrailWebuiNetwork: internal_api
-    ContrailTsnNetwork: internal_api
-    ContrailVrouterNetwork: internal_api
-    ContrailDpdkNetwork: internal_api
+    ContrailTsnNetwork: {{ CONTRAIL_CTRL_DATA_NW }}
+    ContrailVrouterNetwork: {{ CONTRAIL_CTRL_DATA_NW }}
+    ContrailDpdkNetwork: {{ CONTRAIL_CTRL_DATA_NW }}
+{% if CONTRAIL_CONTROL_SERVER %}
+  VrouterControlNodeIps: {{ CONTRAIL_CONTROL_SERVER }}
+{% endif %}
 {% set contrail_version = CONTRAIL_VERSION.split('.') %}
   ContrailDpdkImage: overcloud-full-dpdk
   ContrailVersion: {{ contrail_version[0] }}

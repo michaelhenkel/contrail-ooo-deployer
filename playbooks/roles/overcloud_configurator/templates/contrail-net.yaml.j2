@@ -1,8 +1,8 @@
 resource_registry:
-  OS::TripleO::Controller::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
-  OS::TripleO::ContrailController::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
-  OS::TripleO::ContrailAnalytics::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
-  OS::TripleO::ContrailAnalyticsDatabase::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: ../../network/config/contrail/controller-nic-config.yaml
+  OS::TripleO::ContrailController::Net::SoftwareConfig: ../../network/config/contrail/contrail-controller-nic-config.yaml
+  OS::TripleO::ContrailAnalytics::Net::SoftwareConfig: ../../network/config/contrail/contrail-analytics-nic-config.yaml
+  OS::TripleO::ContrailAnalyticsDatabase::Net::SoftwareConfig: ../../network/config/contrail/contrail-analytics-database-nic-config.yaml
   OS::TripleO::Compute::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
   OS::TripleO::ContrailTsn::Net::SoftwareConfig: ../../network/config/contrail/contrail-nic-config-compute.yaml
 {% if BUILD_DPDK_IMAGE == 'yes' %}

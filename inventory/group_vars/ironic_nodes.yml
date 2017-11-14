@@ -180,3 +180,13 @@ ironic_nodes:
     cpus: 4
     disk_gb: 40
     ipmi_driver: pxe_ssh
+  compute-dpdk-1-at-5b3s34:
+    ip: 10.87.122.25
+    mac: 90:e2:ba:84:53:7b
+    role: compute-dpdk
+    user: ADMIN
+    password: ADMIN
+    memory: 16348
+    cpus: 4
+    disk_gb: 40
+    ipmi_driver: pxe_ipmitool

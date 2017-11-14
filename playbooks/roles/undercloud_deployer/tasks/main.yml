@@ -1,10 +1,13 @@
 ---
-- name: undercloud deploy
-  include: deploy_undercloud.yml
+#- name: undercloud deploy
+#  include: deploy_undercloud.yml
 
 - name: import ironic
   include: import_ironic.yml
   with_dict: "{{ ironic_nodes }}"
+
+#- name: prepare overcloud images
+#  include: prepare_overcloud_images.yaml
 
 - name: ironic introspection
   include: ironic_introspection.yml

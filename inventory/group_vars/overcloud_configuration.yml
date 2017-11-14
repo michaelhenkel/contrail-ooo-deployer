@@ -3,6 +3,7 @@ OPENSTACK_CONTROLLER_COUNT: 3
 CONTRAIL_CONTROLLER_COUNT: 3
 CONTRAIL_ANALYTICS_COUNT: 3
 CONTRAIL_ANALYTICS_DB_COUNT: 3
+CONTRAIL_CONTROL_SERVER: 10.0.0.40,10.0.0.41,10.0.0.42
 CONTRAIL_TSN_COUNT: 0
 COMPUTE_COUNT: 3
 COMPUTE_DPDK_COUNT: 0
@@ -10,12 +11,12 @@ QEMU: true
 CONTRAIL_REPO: http://192.168.24.1/contrail
 EC2METADATAIP: 192.168.24.1
 DNS_SERVERS: 10.87.64.101
-NTP_SERVER: 10.0.0.1
+NTP_SERVER: 10.1.0.1
 CONTRAIL_PHY_INTERFACE: ens7
 CONTRAIL_VROUTER_GW: 10.0.0.1
 CONTRAIL_VROUTER_NETMASK: 255.255.255.0
 CONTROLPLANE_INTERFACE: eth0
-EXTERNAL_INTERFACE: vlan10
+EXTERNAL_INTERFACE: vlan720
 VROUTER_PARENT_VLAN_INTERFACE:
 VROUTER_BOND_INTERFACE: 
 VROUTER_BOND_MEMBERS: 
@@ -25,6 +26,7 @@ DPDK_HUGEPAGES:
 DPDK_COREMASK:
 DPDK_DRIVER:
 STACK_NAME: "overcloud"
+CONTRAIL_CTRL_DATA_NW: tenant
 
 ### Storage Environment configuration
 CEPH_SUPPORT: false
@@ -47,38 +49,46 @@ contrail_networks:
     Gateway: 192.168.24.1
   InternalApi:
     PrefixLength: 24
+    Prefix: 10.1.0.0
+    Gateway: 10.1.0.1
+    VlanId: 710
+    AllocationStart: 10.1.0.11
+    AllocationEnd: 10.1.0.200
+  External:
+    PrefixLength: 24
+    Prefix: 10.2.0.0
+    VlanId: 720
+    Gateway: 10.2.0.1
+    AllocationStart: 10.2.0.11
+    AllocationEnd: 10.2.0.200
+  Management:
+    PrefixLength: 24
+    Prefix: 10.3.0.0
+    Gateway: 10.3.0.1
+    VlanId: 730
+    AllocationStart: 10.3.0.11
+    AllocationEnd: 10.3.0.200
+  Storage:
+    PrefixLength: 24
+    Prefix: 10.4.0.0
+    VlanId: 740
+    Gateway: 10.4.0.1
+    AllocationStart: 10.4.0.11
+    AllocationEnd: 10.4.0.200
+  StorageMgmt:
+    PrefixLength: 24
+    Prefix: 10.5.0.0
+    Gateway: 10.5.0.1
+    VlanId: 750
+    AllocationStart: 10.5.0.11
+    AllocationEnd: 10.5.0.200
+  Tenant:
+    PrefixLength: 24
     Prefix: 10.0.0.0
     Gateway: 10.0.0.1
     AllocationStart: 10.0.0.11
     AllocationEnd: 10.0.0.200
-  External:
-    PrefixLength: 24
-    Prefix: 10.1.0.0
-    VlanId: 10
-    Gateway: 10.1.0.1
-    AllocationStart: 10.1.0.11
-    AllocationEnd: 10.1.0.200
-  Management:
-    PrefixLength: 24
-    Prefix: 10.2.0.0
-    Gateway: 10.2.0.1
-    VlanId: 20
-    AllocationStart: 10.2.0.11
-    AllocationEnd: 10.2.0.200
-  Storage:
-    PrefixLength: 24
-    Prefix: 10.3.0.0
-    VlanId: 30
-    Gateway: 10.3.0.1
-    AllocationStart: 10.3.0.11
-    AllocationEnd: 10.3.0.200
-  StorageMgmt:
-    PrefixLength: 24
-    Prefix: 10.4.0.0
-    Gateway: 10.4.0.1
-    VlanId: 40
-    AllocationStart: 10.4.0.11
-    AllocationEnd: 10.4.0.200
+
 controller_nic_layout:
 - nic1:
     Network: ControlPlane
@@ -86,24 +96,82 @@ controller_nic_layout:
       - ip_netmask: 169.254.169.254/32
         next_hop: 192.168.24.1
     DnsServer: true
-- nic2:
+- vlan710:
     Network: InternalApi
+    VlanParent: nic1
     Routes:
       - default: true
-- nic3:
-    Network: None
-- vlan10:
+- vlan720:
     Network: External
-    VlanParent: nic3
-- vlan20:
+    VlanParent: nic1
+- vlan730:
     Network: Management
-    VlanParent: nic3
-- vlan30:
+    VlanParent: nic1
+- vlan740:
     Network: Storage
-    VlanParent: nic3
-- vlan40:
+    VlanParent: nic1
+- vlan750:
     Network: StorageMgmt
-    VlanParent: nic3
+    VlanParent: nic1
+
+contrail_controller_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.168.24.1
+    DnsServer: true
+- nic2:
+    Network: Tenant
+- vlan710:
+    Network: InternalApi
+    VlanParent: nic1
+    Routes:
+      - default: true
+- vlan720:
+    Network: External
+    VlanParent: nic1
+- vlan730:
+    Network: Management
+    VlanParent: nic1
+
+contrail_analytics_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.168.24.1
+    DnsServer: true
+- vlan710:
+    Network: InternalApi
+    VlanParent: nic1
+    Routes:
+      - default: true
+- vlan720:
+    Network: External
+    VlanParent: nic1
+- vlan730:
+    Network: Management
+    VlanParent: nic1
+
+contrail_analytics_database_nic_layout:
+- nic1:
+    Network: ControlPlane
+    Routes:
+      - ip_netmask: 169.254.169.254/32
+        next_hop: 192.168.24.1
+    DnsServer: true
+- vlan710:
+    Network: InternalApi
+    VlanParent: nic1
+    Routes:
+      - default: true
+- vlan720:
+    Network: External
+    VlanParent: nic1
+- vlan730:
+    Network: Management
+    VlanParent: nic1
 
 compute_nic_layout:
 - nic1:
@@ -115,60 +183,60 @@ compute_nic_layout:
 - ens7:
     Network: None
 - vhost0:
+    Network: Tenant
+- vlan710:
     Network: InternalApi
+    VlanParent: nic1
     Routes:
       - default: true
-- eth1:
-    Network: None
-- vlan10:
+- vlan720:
     Network: External
-    VlanParent: eth1
-- vlan20:
+    VlanParent: nic1
+- vlan730:
     Network: Management
-    VlanParent: eth1
-- vlan30:
-    Network: Storage
-    VlanParent: eth1
-- vlan40:
-    Network: StorageMgmt
-    VlanParent: eth1
+    VlanParent: nic1
 
 compute_dpdk_nic_layout:
-- eth0:
+- ens2f1:
     Network: ControlPlane
     Routes:
       - ip_netmask: 169.254.169.254/32
         next_hop: 192.168.24.1
     DnsServer: true
 - vhost0:
+    Network: Tenant
+- ens2f0:
+    Network: None
+- vlan710:
     Network: InternalApi
+    VlanParent: ens2f1
+- vlan730:
+    Network: External
+    VlanParent: ens2f1
     Routes:
       - default: true
-- eth1:
-    Network: None
-- vlan10:
-    Network: External
-    VlanParent: eth1
-- vlan20:
+- vlan730:
     Network: Management
-    VlanParent: eth1
-- vlan30:
-    Network: Storage
-    VlanParent: eth1
-- vlan40:
-    Network: StorageMgmt
-    VlanParent: eth1
+    VlanParent: ens2f1
 
 static_ips:
-  ExternalVip: 10.1.0.10
-  InternalApiVip: 10.0.0.10
+  ExternalVip: 10.2.0.10
+  InternalApiVip: 10.1.0.10
   Controller:
     internal_api:
-    - 10.0.0.20
-    - 10.0.0.21
-    - 10.0.0.22
+    - 10.1.0.20
+    - 10.1.0.21
+    - 10.1.0.22
   Compute:
     internal_api:
+    - 10.1.0.30
+    - 10.1.0.31
+    - 10.1.0.32
+    - 10.1.0.33
+    - 10.1.0.34
+    - 10.1.0.35
+    - 10.1.0.36
+    tenant:
     - 10.0.0.30
     - 10.0.0.31
     - 10.0.0.32
@@ -178,26 +246,34 @@ static_ips:
     - 10.0.0.36
   ContrailController:
     internal_api:
+    - 10.1.0.40
+    - 10.1.0.41
+    - 10.1.0.42
+    tenant:
     - 10.0.0.40
     - 10.0.0.41
     - 10.0.0.42
   ContrailAnalytics:
     internal_api:
-    - 10.0.0.50
-    - 10.0.0.51
-    - 10.0.0.52
+    - 10.1.0.50
+    - 10.1.0.51
+    - 10.1.0.52
   ContrailAnalyticsDatabase:
     internal_api:
-    - 10.0.0.60
-    - 10.0.0.61
-    - 10.0.0.62
+    - 10.1.0.60
+    - 10.1.0.61
+    - 10.1.0.62
   ContrailTsn:
     internal_api:
-    - 10.0.0.70
-    - 10.0.0.71
-    - 10.0.0.72
+    - 10.1.0.70
+    - 10.1.0.71
+    - 10.1.0.72
   ContrailDpdk:
     internal_api:
+    - 10.1.0.80
+    - 10.1.0.81
+    - 10.1.0.82
+    tenant:
     - 10.0.0.80
     - 10.0.0.81
     - 10.0.0.82

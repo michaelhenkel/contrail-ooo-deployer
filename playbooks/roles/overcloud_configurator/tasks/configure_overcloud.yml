@@ -44,10 +44,25 @@
     state: directory
     mode: 0755
 
-- name: create contrail-nic-config.yaml
+- name: create controller-nic-config.yaml
   template:
-    src: contrail-nic-config.yaml.j2
-    dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-nic-config.yaml
+    src: controller-nic-config.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/network/config/contrail/controller-nic-config.yaml
+
+- name: create contrail-controller-nic-config.yaml
+  template:
+    src: contrail-controller-nic-config.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-controller-nic-config.yaml
+
+- name: create contrail-analytics-nic-config.yaml
+  template:
+    src: contrail-analytics-nic-config.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-analytics-nic-config.yaml
+
+- name: create contrail-analyticsi-database-nic-config.yaml
+  template:
+    src: contrail-analytics-database-nic-config.yaml.j2
+    dest: /home/stack/tripleo-heat-templates/network/config/contrail/contrail-analytics-database-nic-config.yaml
 
 - name: create contrail-nic-config-compute.yaml
   template:
@@ -81,6 +96,6 @@
     dest: /home/stack/create-stack.sh
     mode: 0755
 
-- name: DEPLOY OVERCLOUD - Run create-stack.sh if stack hasn't already been created
-  shell: "source /home/stack/stackrc && sh /home/stack/create-stack.sh"
-  when: stack_exist|failed
+#- name: DEPLOY OVERCLOUD - Run create-stack.sh if stack hasn't already been created
+#  shell: "source /home/stack/stackrc && sh /home/stack/create-stack.sh"
+#  when: stack_exist|failed

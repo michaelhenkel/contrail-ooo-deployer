@@ -1,0 +1,229 @@
+heat_template_version: {{ OPENSTACK_VERSION }}
+
+description: >
+  Software Config to drive os-net-config to configure multiple interfaces
+  for the compute role. This is an example for a Nova compute node using
+  Contrail vrouter and the vhost0 interface.
+
+parameters:
+  ControlPlaneIp:
+    default: ''
+    description: IP address/subnet on the ctlplane network
+    type: string
+  ExternalIpSubnet:
+    default: ''
+    description: IP address/subnet on the external network
+    type: string
+  InternalApiIpSubnet:
+    default: ''
+    description: IP address/subnet on the internal API network
+    type: string
+  InternalApiDefaultRoute: # Not used by default in this template
+    default: '10.0.0.1'
+    description: The default route of the internal api network.
+    type: string
+  StorageIpSubnet:
+    default: ''
+    description: IP address/subnet on the storage network
+    type: string
+  StorageMgmtIpSubnet:
+    default: ''
+    description: IP address/subnet on the storage mgmt network
+    type: string
+  TenantIpSubnet:
+    default: ''
+    description: IP address/subnet on the tenant network
+    type: string
+  ManagementIpSubnet: # Only populated when including environments/network-management.yaml
+    default: ''
+    description: IP address/subnet on the management network
+    type: string
+  ExternalNetworkVlanID:
+    default: 10
+    description: Vlan ID for the external network traffic.
+    type: number
+  InternalApiNetworkVlanID:
+    default: 20
+    description: Vlan ID for the internal_api network traffic.
+    type: number
+  StorageNetworkVlanID:
+    default: 30
+    description: Vlan ID for the storage network traffic.
+    type: number
+  StorageMgmtNetworkVlanID:
+    default: 40
+    description: Vlan ID for the storage mgmt network traffic.
+    type: number
+  TenantNetworkVlanID:
+    default: 50
+    description: Vlan ID for the tenant network traffic.
+    type: number
+  ManagementNetworkVlanID:
+    default: 60
+    description: Vlan ID for the management network traffic.
+    type: number
+  ControlPlaneSubnetCidr: # Override this via parameter_defaults
+    default: '24'
+    description: The subnet CIDR of the control plane network.
+    type: string
+  ControlPlaneDefaultRoute: # Override this via parameter_defaults
+    description: The default route of the control plane network.
+    type: string
+  ExternalInterfaceDefaultRoute: # Not used by default in this template
+    default: '10.0.0.1'
+    description: The default route of the external network.
+    type: string
+  DnsServers: # Override this via parameter_defaults
+    default: []
+    description: A list of DNS servers (2 max for some implementations) that will be added to resolv.conf.
+    type: comma_delimited_list
+  EC2MetadataIp: # Override this via parameter_defaults
+    description: The IP address of the EC2 metadata server.
+    type: string
+
+{% if OPENSTACK_VERSION == 'ocata' %}}
+resources:
+  OsNetConfigImpl:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: script
+      config:
+        str_replace:
+          template:
+            get_file: ../../scripts/run-os-net-config.sh
+          params:
+            $network_config:
+              network_config:
+{% for nic in controller_nic_layout %}
+{% if 'vlan' in nic.keys()[0] %}
+{% set vlan_id = nic.keys()[0].split('vlan') %}
+              - type: vlan
+                device: {{ nic.values()[0].VlanParent }}
+                vlan_id: {{ vlan_id[1] }}
+{% elif 'bond' in nic.keys()[0] %}
+              - type: linux_bond
+                name: {{ nic.keys()[0] }}
+                use_dhcp: false
+                bonding_options: {{ nic.values()[0].BondingOptions }}
+{% if 'Members' in nic.values()[0] %}
+                members:
+{% for member in nic.values()[0].Members %}
+                - type: interface
+                  name: {{ member }}
+{% endfor %}
+{% endif %}
+{% else %}
+              - type: interface
+                name: {{ nic.keys()[0] }}
+{% endif %}
+                use_dhcp: false
+{% if 'DnsServer' in nic.values()[0] %}
+                dns_servers:
+                  get_param: DnsServers
+{% endif %}
+{% if 'Routes' in nic.values()[0] %}
+                routes:
+{% for routes in nic.values()[0].Routes %}
+{% if 'ip_netmask' in routes %}
+                - ip_netmask: {{ routes.ip_netmask }}
+                  next_hop:
+                    {{ routes.next_hop }}
+{% endif %}
+{% if 'default' in routes %}
+                - default: true
+                  next_hop:
+                    get_param: {{ nic.values()[0].Network }}DefaultRoute
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if 'Network' in nic.values()[0] %}
+{% if nic.values()[0].Network != 'None' %}
+                addresses:
+                - ip_netmask:
+{% if nic.values()[0].Network == 'ControlPlane' %}
+                    list_join:
+                      - '/'
+                      - - get_param: ControlPlaneIp
+                        - get_param: ControlPlaneSubnetCidr
+{% else %}
+                    get_param: {{ nic.values()[0].Network }}IpSubnet
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+outputs:
+  OS::stack_id:
+    description: The OsNetConfigImpl resource.
+    value:
+      get_resource: OsNetConfigImpl
+{% else %}
+resources:
+  OsNetConfigImpl:
+    type: OS::Heat::StructuredConfig
+    properties:
+      group: os-apply-config
+      config:
+        os_net_config:
+          network_config:
+{% for nic in controller_nic_layout %}
+{% if 'vlan' in nic.keys()[0] %}
+{% set vlan_id = nic.keys()[0].split('vlan') %}
+              - type: vlan
+                device: {{ nic.values()[0].VlanParent }}
+                vlan_id: {{ vlan_id[1] }}
+{% elif 'bond' in nic.keys()[0] %}
+              - type: linux_bond
+                name: {{ nic.keys()[0] }}
+                use_dhcp: false
+                bonding_options: {{ nic.values()[0].BondingOptions }}
+{% if 'Members' in nic.values()[0] %}
+                members:
+{% for member in nic.values()[0].Members %}
+                - type: interface
+                  name: {{ member }}
+{% endfor %}
+{% endif %}
+{% else %}
+              - type: interface
+                name: {{ nic.keys()[0] }}
+{% endif %}
+                use_dhcp: false
+{% if 'DnsServer' in nic.values()[0] %}
+                dns_servers:
+                  get_param: DnsServers
+{% endif %}
+{% if 'Routes' in nic.values()[0] %}
+                routes:
+{% for routes in nic.values()[0].Routes %}
+{% if 'ip_netmask' in routes %}
+                - ip_netmask: {{ routes.ip_netmask }}
+                  next_hop:
+                    {{ routes.next_hop }}
+{% endif %}
+{% if 'default' in routes %}
+                - default: true
+                  next_hop:
+                    get_param: {{ nic.values()[0].Network }}DefaultRoute
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if 'Network' in nic.values()[0] %}
+{% if nic.values()[0].Network != 'None' %}
+                addresses:
+                - ip_netmask:
+{% if nic.values()[0].Network == 'ControlPlane' %}
+                    list_join:
+                      - '/'
+                      - - get_param: ControlPlaneIp
+                        - get_param: ControlPlaneSubnetCidr
+{% else %}
+                    get_param: {{ nic.values()[0].Network }}IpSubnet
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+outputs:
+  OS::stack_id:
+    description: The OsNetConfigImpl resource.
+    value: {get_resource: OsNetConfigImpl}
+{% endif %}
