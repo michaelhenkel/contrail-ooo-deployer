@@ -7,16 +7,16 @@ resource_registry:
 {% if 'internal_api' in value %}
   OS::TripleO::{{ key }}::Ports::InternalApiPort: ../network/ports/internal_api_from_pool.yaml
 {% endif %}
-{% if 'Storage' in value %}
+{% if 'storage' in value %}
   OS::TripleO::{{ key }}::Ports::StoragePort: ../network/ports/storage_from_pool.yaml
 {% endif %}
-{% if 'StorageMgmt' in value %}
+{% if 'storagemgmt' in value %}
   OS::TripleO::{{ key }}::Ports::StorageMgmtPort: ../network/ports/storage_mgmt_from_pool.yaml
 {% endif %}
-{% if 'Tenant' in value %}
+{% if 'tenant' in value %}
   OS::TripleO::{{ key }}::Ports::TenantPort: ../network/ports/tenant_from_pool.yaml
 {% endif %}
-{% if 'Management' in value %}
+{% if 'management' in value %}
   OS::TripleO::{{ key }}::Ports::ManagementPort: ../network/ports/management_from_pool.yaml
 {% endif %}
 {% endif %}

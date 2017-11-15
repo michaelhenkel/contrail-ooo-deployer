@@ -33,8 +33,8 @@
     --vcpus={{ UNDERCLOUD_VCPU }} \
     --ram={{ UNDERCLOUD_RAM }} \
     --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio,portgroup=prov \
+    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio,portgroup=prov \
     --virt-type kvm \
     --cpu host \
     --import \
@@ -52,9 +52,9 @@
     --vcpus={{ UNDERCLOUD_VCPU }} \
     --ram={{ UNDERCLOUD_RAM }} \
     --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_MGMT_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio,portgroup=prov \
+    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio,portgroup=prov \
+    --network network={{ UNDERCLOUD_MGMT_NW }},model=virtio,portgroup=prov \
     --virt-type kvm \
     --cpu host \
     --import \
@@ -72,8 +72,8 @@
     --vcpus={{ UNDERCLOUD_VCPU }} \
     --ram={{ UNDERCLOUD_RAM }} \
     --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio,portgroup=prov \
+    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio,portgroup=prov \
     --mac={{UNDERCLOUD_MAC}} \
     --virt-type kvm \
     --cpu host \
@@ -92,9 +92,9 @@
     --vcpus={{ UNDERCLOUD_VCPU }} \
     --ram={{ UNDERCLOUD_RAM }} \
     --network network={{ UNDERCLOUD_DEFAULT_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio \
-    --network network={{ UNDERCLOUD_MGMT_NW }},model=virtio \
+    --network network={{ UNDERCLOUD_PROV_NW }},model=virtio,portgroup=prov \
+    --network network={{ UNDERCLOUD_INT_API_NW }},model=virtio,portgroup=prov \
+    --network network={{ UNDERCLOUD_MGMT_NW }},model=virtio,portgroup=prov \
     --mac={{UNDERCLOUD_MAC}} \
     --virt-type kvm \
     --cpu host \

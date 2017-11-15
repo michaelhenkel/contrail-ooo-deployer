@@ -3,7 +3,7 @@ OPENSTACK_CONTROLLER_COUNT: 3
 CONTRAIL_CONTROLLER_COUNT: 3
 CONTRAIL_ANALYTICS_COUNT: 3
 CONTRAIL_ANALYTICS_DB_COUNT: 3
-CONTRAIL_CONTROL_SERVER: 10.0.0.40,10.0.0.41,10.0.0.42
+CONTRAIL_CONTROL_SERVER: 10.0.0.20,10.0.0.21,10.0.0.22
 CONTRAIL_TSN_COUNT: 0
 COMPUTE_COUNT: 3
 COMPUTE_DPDK_COUNT: 0
@@ -13,6 +13,7 @@ EC2METADATAIP: 192.168.24.1
 DNS_SERVERS: 10.84.5.100
 NTP_SERVER: 10.1.0.1
 CONTRAIL_PHY_INTERFACE: ens7
+CONTRAIL_DPDK_PHY_INTERFACE: ens2f0
 CONTRAIL_VROUTER_GW: 10.0.0.1
 CONTRAIL_VROUTER_NETMASK: 255.255.255.0
 CONTROLPLANE_INTERFACE: eth0
@@ -205,16 +206,14 @@ compute_dpdk_nic_layout:
     DnsServer: true
 - vhost0:
     Network: Tenant
-- ens2f0:
-    Network: None
 - vlan710:
     Network: InternalApi
     VlanParent: ens2f1
-- vlan730:
-    Network: External
-    VlanParent: ens2f1
     Routes:
       - default: true
+- vlan720:
+    Network: External
+    VlanParent: ens2f1
 - vlan730:
     Network: Management
     VlanParent: ens2f1
