@@ -1,8 +1,8 @@
 openstack overcloud deploy --templates /home/stack/tripleo-heat-templates/ \
-{% if OPENSTACK_VERSION == 'newton' }
+{% if OPENSTACK_VERSION == 'newton' %}
   --roles-file /home/stack/tripleo-heat-templates/environments/contrail/roles_data.yaml \
 {% endif %}
-{% if OPENSTACK_VERSION == 'ocata' }
+{% if OPENSTACK_VERSION == 'ocata' %}
   --roles-file /home/stack/tripleo-heat-templates/environments/contrail/roles_data_contrail.yaml \
 {% endif %}
   -e /home/stack/tripleo-heat-templates/environments/puppet-pacemaker.yaml \

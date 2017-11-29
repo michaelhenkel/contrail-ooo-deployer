@@ -1,3 +1,3 @@
 ---
 - name: register with Portal
-  command: subscription-manager register --username {{ RH_PORTAL_USER }} --password {{ RH_PORTAL_PASSWORD }}
+  command: subscription-manager register --username {{ RH_PORTAL_USER }} --password {{ RH_PORTAL_PASSWORD }} --force
