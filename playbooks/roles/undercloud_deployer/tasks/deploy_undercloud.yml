@@ -47,5 +47,19 @@
     regexp: '^#inspection_iprange.*'
     line: 'inspection_iprange = {{ UNDERCLOUD_INSPECTION_IP_RANGE }}'
 
+- name: Setup NTP servers
+  lineinfile: dest=/etc/ntp.conf state=present insertbefore="server 0.rhel.pool.ntp.org iburst" line="server {{ NTP_SERVER_UNDERCLOUD }}"
+  tags:
+    - time_setup
+    - initial_setup
+  become: true
+  when: NTP_SERVER_UNDERCLOUD is defined
+
+- name: Restart ntp service
+  shell: service ntpd restart
+  become: true
+  ignore_errors: true
+  when: NTP_SERVER_UNDERCLOUD is defined
+
 - name: deploy the thing
   command: /usr/bin/openstack undercloud install
