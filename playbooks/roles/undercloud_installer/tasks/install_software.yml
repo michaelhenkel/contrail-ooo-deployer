@@ -10,8 +10,11 @@
     name: ntp
     state: latest
 
-- name: start ntpd service
-  shell: service ntpd start
+- name: Restart NTP service
+  service: name=ntpd state=restarted
+  tags:
+    - time_setup
+    - initial_setup
   become: true
   ignore_errors: true
 
