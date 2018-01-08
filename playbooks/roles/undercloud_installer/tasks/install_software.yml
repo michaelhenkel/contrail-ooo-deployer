@@ -5,6 +5,19 @@
     state: present
     key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
 
+- name: install ntp
+  yum:
+    name: ntp
+    state: latest
+
+- name: Restart NTP service
+  service: name=ntpd state=restarted
+  tags:
+    - time_setup
+    - initial_setup
+  become: true
+  ignore_errors: true
+
 - name: yum update all
   yum:
     name: '*'

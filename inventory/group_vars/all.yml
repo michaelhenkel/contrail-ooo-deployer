@@ -38,5 +38,6 @@ CONTRAIL_VERSION_BUILD: 35
 CONTRAIL_PACKAGE_LOCATION: http://10.0.0.2/
 BUILD_DPDK_IMAGE: 'no'
 # Optional parameter
+#NTP_SERVER_UNDERCLOUD: x.x.x.x
 #UNDERCLOUD_STATIC_IP: x.x.x.x # external IP from DHCP server
 #UNDERCLOUD_MAC: 52:54:00:16:11:2e  # Used for external ip in UC.
