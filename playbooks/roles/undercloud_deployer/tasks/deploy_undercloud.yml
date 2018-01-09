@@ -55,8 +55,18 @@
   become: true
   when: NTP_SERVER_UNDERCLOUD is defined
 
+- name: set timezone to America/Los_Angeles
+  timezone:
+    name: America/Los_Angeles
+  become: true
+  ignore_errors: true
+  when: NTP_SERVER_UNDERCLOUD is defined
+
 - name: Restart ntp service
-  shell: service ntpd restart
+  service: name=ntpd state=restarted
+  tags:
+    - time_setup
+    - initial_setup
   become: true
   ignore_errors: true
   when: NTP_SERVER_UNDERCLOUD is defined
